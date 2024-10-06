@@ -3,6 +3,8 @@ import Image from "next/image";
 import localFont from "next/font/local";
 import styles from "@/styles/Home.module.css";
 import { Box } from "@chakra-ui/react";
+import Navbar from "@/components/Navbar";
+import SpacesDashboard from "@/components/SpacesDashboard";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,7 +27,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Box>
-        hle
+        <Navbar/>
+        <SpacesDashboard/>
       </Box>
     </>
   );
