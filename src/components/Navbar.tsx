@@ -26,12 +26,12 @@ const Navbar = () => {
             router.push('/')
         }}>Logo</Box>
         <Box display="flex" gap="1rem">
-          <Box color="#C9D3EE" fontSize="18px" onClick={()=>{
+          <Box color={router.pathname==='/createSpace'? '#3FE0B2':"#C9D3EE"} fontSize="18px" onClick={()=>{
             router.push('createSpace')
-          }} cursor="pointer">Create Spaces</Box>
-          <Box color="#C9D3EE" fontSize="18px" onClick={()=>{
+          }} cursor="pointer" _hover={{color:'white'}} fontWeight="500">Create Spaces</Box>
+          <Box color={router.pathname==='/enlist'? '#3FE0B2':"#C9D3EE"} fontSize="18px" onClick={()=>{
             router.push('enlist')
-          }} cursor="pointer">Enlist</Box>
+          }} cursor="pointer" _hover={{color:'white'}} fontWeight="500">Enlist</Box>
         </Box>
       </Box>
       <Box display="flex" gap="1rem" alignItems="center">

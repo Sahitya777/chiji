@@ -6,11 +6,11 @@ import { useSignMessage } from "wagmi";
 
 const SpacesDashboard = () => {
   const [spaces, setSpaces] = useState([
-    { name: "Avnu", members: 70 },
-    { name: "Avnu", members: 70 },
-    { name: "Avnu", members: 70 },
-    { name: "Avnu", members: 70 },
-    { name: "Avnu", members: 70 },
+    { name: "Avnu", members: 70,id:'Avnu.eth' },
+    { name: "Avnu", members: 70,id:'' },
+    { name: "Avnu", members: 70,id:'' },
+    { name: "Avnu", members: 70,id:'' },
+    { name: "Avnu", members: 70,id:'' },
   ]); // Example array of 20 items
   const { signMessage } = useSignMessage();
   const router = useRouter();
@@ -25,7 +25,7 @@ const SpacesDashboard = () => {
             <Box
               key={index}
               cursor="pointer"
-              bg="gray.100"
+              bg="#151621"
               padding="1rem"
               height="220px"
               width="90%" // Reduced width for closer columns
@@ -37,7 +37,7 @@ const SpacesDashboard = () => {
               alignItems="center"
               boxShadow="md"
               onClick={() => {
-                router.push("/404");
+                router.push(`/protocol/${space.id}`);
               }}
             >
               <Box>
@@ -49,12 +49,21 @@ const SpacesDashboard = () => {
                   style={{ cursor: "pointer", borderRadius: "40px" }}
                 />
               </Box>
-              <Box fontSize="18px">{space.name}</Box>
-              <Box>{space.members}</Box>
+              <Box fontSize="18px" color="#C9D3EE">
+                {space.name}
+              </Box>
+              <Box color="#C9D3EE">{space.members}</Box>
               <Button
-                cursor="pointer"
-                border="1px solid black"
-                width="70%"
+                width="80%"
+                padding="1.2rem"
+                bg="transparent"
+                color="#3FE0B2"
+                height={"2rem"}
+                fontSize={"14px"}
+                lineHeight="14px"
+                border="1px solid #3FE0B2"
+                _hover={{ bg: "#3FE0B2", color: "black" }}
+                borderRadius={"6px"}
                 onClick={(event) => {
                   event.stopPropagation(); // Prevents the Box's onClick from being triggered
                   signMessage({ message: "hello world" });

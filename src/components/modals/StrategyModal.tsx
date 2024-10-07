@@ -35,7 +35,7 @@ import { useRouter } from "next/router";
 import { useAccount, useConnect } from "wagmi";
 import MetamaskIcon from "@/assets/icons/MetamaskIcon";
 import CoinbaseIcon from "@/assets/icons/CoinbaseIcon";
-const ConnectWallet = ({
+const StrategyDashboard = ({
   buttonText,
   backGroundOverLay,
   ...restProps
@@ -109,7 +109,7 @@ const ConnectWallet = ({
               fontStyle="normal"
               lineHeight="20px"
             >
-              Connect Wallet
+              Add Strategy
             </ModalHeader>
             <ModalCloseButton
               // onClick={() => {
@@ -131,65 +131,7 @@ const ConnectWallet = ({
                     gap="1rem"
                     mb="1.5rem"
                   >
-                    {availableDataLoading ? (
-                      // Always render this loading state until data is fully loaded
-                      <></>
-                    ) : (
-                      wagmiConnectors.filter((connector: any) => 
-                        connector.id === 'metaMaskSDK' || connector.id === 'coinbaseWalletSDK' || connector.id === 'walletConnect'
-                      ).map((connector: any) => (
-                        <Box
-                          w="full"
-                          border="1px solid var(--stroke-of-30, rgba(103, 109, 154, 0.30))"
-                          py="2"
-                          borderRadius="20px"
-                          gap="0.3rem"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          // justifyContent="space-between"
-                          cursor="pointer"
-                          // mb="16px"
-                          // onClick={() => router.push("/market")}
-                          key={connector.id}
-                          onClick={() => {
-                            localStorage.setItem(
-                              "lastUsedConnector",
-                              "MetaMask"
-                            );
-                            localStorage.setItem("connected", "MetaMask");
-                            localStorage.setItem("networkConnected", "Base");
-                            connectWagmi({ connector });
-                            //   router.replace(marketHref2)
-                          }}
-                        >
-                          <Box p="1">
-                            {connector.id == "metaMaskSDK" ? (
-                              <MetamaskIcon />
-                            ) : (
-                              <CoinbaseIcon />
-                            )}
-                          </Box>
-                          <Box color="white">
-                            {availableDataLoading ? (
-                              <Skeleton
-                                width="6rem"
-                                height="1.4rem"
-                                startColor="#101216"
-                                endColor="#2B2F35"
-                                borderRadius="6px"
-                              />
-                            ) : connector.id == "metaMaskSDK" ? (
-                              "MetaMask"
-                            ) : connector.id == "coinbaseWalletSDK" ? (
-                              "Coinbase"
-                            ) : (
-                              "Wallet Connect"
-                            )}
-                          </Box>
-                        </Box>
-                      ))
-                    )}
+                    Hello
                   </Box>
                 </Card>
               </Box>
@@ -200,4 +142,4 @@ const ConnectWallet = ({
     </div>
   );
 };
-export default ConnectWallet;
+export default StrategyDashboard;
