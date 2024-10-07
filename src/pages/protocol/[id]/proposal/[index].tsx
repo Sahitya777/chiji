@@ -1,8 +1,14 @@
+import Navbar from '@/components/Navbar'
+import ProposalDashboard from '@/components/ProposalDashboard'
+import { Box } from '@chakra-ui/react'
 import React from 'react'
 
 const Index = () => {
   return (
-    <div>work</div>
+    <Box>
+      <Navbar/>
+      <ProposalDashboard/>
+    </Box>
   )
 }
 

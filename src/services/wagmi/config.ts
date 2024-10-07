@@ -7,7 +7,7 @@ export const projectId = '<WALLETCONNECT_PROJECT_ID>' as string
 
 export const config = createConfig({
   chains: [baseSepolia],
-  connectors:[coinbaseWallet(),metaMask(),walletConnect({projectId})],
+  connectors:[metaMask(),coinbaseWallet(),walletConnect({projectId})],
   ssr: true,
   storage: createStorage({
     storage: cookieStorage,

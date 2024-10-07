@@ -2,7 +2,7 @@ import { Box, Button, SimpleGrid } from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useSignMessage } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 
 const SpacesDashboard = () => {
   const [spaces, setSpaces] = useState([
@@ -14,6 +14,7 @@ const SpacesDashboard = () => {
   ]); // Example array of 20 items
   const { signMessage } = useSignMessage();
   const router = useRouter();
+  const {address}=useAccount()
 
   return (
     <Box display="flex" width="100%" padding="2rem">
@@ -53,10 +54,10 @@ const SpacesDashboard = () => {
                 {space.name}
               </Box>
               <Box color="#C9D3EE">{space.members}</Box>
-              <Button
+              {address &&<Button
                 width="80%"
                 padding="1.2rem"
-                bg="transparent"
+                bg="black"
                 color="#3FE0B2"
                 height={"2rem"}
                 fontSize={"14px"}
@@ -70,7 +71,7 @@ const SpacesDashboard = () => {
                 }}
               >
                 Join
-              </Button>
+              </Button>}
             </Box>
           ))}
         </SimpleGrid>

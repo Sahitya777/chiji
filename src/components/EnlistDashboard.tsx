@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useSignTypedData } from "wagmi";
 import StrategyDashboard from "./modals/StrategyModal";
 
-const CreateSpaceDashboard = () => {
+const EnlistDashboard = () => {
   const { signTypedData } = useSignTypedData();
   const [authorAddresses, setAuthorAddresses] = useState<any>([]);
   const [adminAddresses, setadminAddresses] = useState<any>([])
@@ -555,7 +555,7 @@ const CreateSpaceDashboard = () => {
         <Button
           width="100%"
           padding="1.2rem"
-          bg="black"
+          bg="transparent"
           color="#3FE0B2"
           height={"2rem"}
           fontSize={"14px"}
@@ -569,7 +569,7 @@ const CreateSpaceDashboard = () => {
         <Button
           width="100%"
           padding="1.2rem"
-          bg="black"
+          bg="transparent"
           color="#3FE0B2"
           height={"2rem"}
           fontSize={"14px"}
@@ -585,4 +585,4 @@ const CreateSpaceDashboard = () => {
   );
 };
 
-export default CreateSpaceDashboard;
+export default EnlistDashboard;
