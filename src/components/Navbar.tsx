@@ -19,6 +19,7 @@ const Navbar = () => {
       display="flex"
       justifyContent="space-between"
       alignItems="center"
+      position="fixed"
       padding="12px 32px"
     >
       <Box display="flex" gap="2rem">

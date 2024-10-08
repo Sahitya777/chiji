@@ -17,7 +17,7 @@ const SpacesDashboard = () => {
   const {address}=useAccount()
 
   return (
-    <Box display="flex" width="100%" padding="2rem">
+    <Box display="flex" width="100%" padding="2rem" pt="5rem">
       <Box width="20%">hello</Box>
       <Box width="70%" padding="1rem">
         <SimpleGrid columns={4} spacingX={2} spacingY={5}>
