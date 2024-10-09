@@ -100,14 +100,14 @@ const ProjectDashboard = () => {
       avatar: "",
       profileLink: "as",
       explorerLink: "ss",
-      statusValue: "author",
+      statusValue: "admin",
     },
     {
       id: "sahi",
       avatar: "",
       profileLink: "as",
       explorerLink: "ss",
-      statusValue: "author",
+      statusValue: "admin",
     },
     {
       id: "sahi",
@@ -176,6 +176,9 @@ const ProjectDashboard = () => {
             setprotocolStatus("overview");
           }}
           cursor="pointer"
+          bg={protocolStatus==="overview"?"#303646":""}
+          padding="8px"
+          borderRadius="6px"
         >
           Overview
         </Box>
@@ -184,6 +187,9 @@ const ProjectDashboard = () => {
           onClick={() => {
             setprotocolStatus("members");
           }}
+          bg={protocolStatus==="members"?"#303646":""}
+          padding="8px"
+          borderRadius="6px"
           cursor="pointer"
         >
           Members
@@ -255,7 +261,7 @@ const ProjectDashboard = () => {
                   mt="0.5rem"
                   cursor="pointer"
                   onClick={() => {
-                    router.replace(`/protocol/${router.query.id}/proposal/id`);
+                    router.push(`/protocol/${router.query.id}/proposal/id`);
                   }}
                 >
                   <Text color="#C9D3EE" width="80%" fontWeight="500">
