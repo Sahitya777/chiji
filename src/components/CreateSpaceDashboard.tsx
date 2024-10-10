@@ -44,7 +44,7 @@ const CreateSpaceDashboard = () => {
     setadminAddresses(updatedAuthors);
   };
   return (
-    <Box display="flex" gap="4rem" width="100%" padding="1rem 4rem">
+    <Box display="flex" gap="4rem" width="100%" padding="1rem 4rem" pt="5rem">
       <Box display="flex" flexDirection="column" mt="1rem" mb="2rem" width="60%">
         <Box>
           <Text fontSize="32px" color="#C9D3EE" fontWeight="500">

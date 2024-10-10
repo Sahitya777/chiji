@@ -19,6 +19,7 @@ const Navbar = () => {
       display="flex"
       justifyContent="space-between"
       alignItems="center"
+      zIndex="100"
       position="fixed"
       padding="12px 32px"
     >

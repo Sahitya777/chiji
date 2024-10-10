@@ -53,7 +53,7 @@ const SpacesDashboard = () => {
               <Box fontSize="18px" color="#C9D3EE">
                 {space.name}
               </Box>
-              <Box color="#C9D3EE">{space.members}</Box>
+              <Box color="#C9D3EE">{space.members} members</Box>
               {address &&<Button
                 width="80%"
                 padding="1.2rem"

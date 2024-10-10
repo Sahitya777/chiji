@@ -1,3 +1,4 @@
+import BackIcon from "@/assets/icons/BackIcon";
 import numberFormatterPercentage from "@/constants/numberFormatterPercentage";
 import {
   Box,
@@ -143,8 +144,12 @@ const ProjectDashboard = () => {
         borderRadius="6px"
         height="81vh"
       >
-        <Box display="flex" gap="0.2rem">
-          <Box></Box>
+        <Box display="flex" gap="0.2rem" cursor="pointer" onClick={()=>{
+          router.push('/')
+        }}>
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <BackIcon/>
+          </Box>
           <Box color="#C9D3EE" fontSize="18px">
             All Projects
           </Box>
@@ -194,6 +199,22 @@ const ProjectDashboard = () => {
         >
           Members
         </Box>
+
+        <Button
+            width="100%"
+            padding="1.2rem"
+            bg="black"
+            color="#3FE0B2"
+            height={"2rem"}
+            fontSize={"14px"}
+            lineHeight="14px"
+            border="1px solid #3FE0B2"
+            _hover={{ bg: "#3FE0B2", color: "black" }}
+            borderRadius={"6px"}
+            mt="0.5rem"
+          >
+            Create Proposal
+          </Button>
       </Box>
 
       {/* Center box with proposals */}
@@ -350,7 +371,7 @@ const ProjectDashboard = () => {
             ))}
           </Box>
         )}
-        <Box
+        {protocolStatus==='members'&&<Box
           color="white"
           borderRadius="8px"
           display="flex"
@@ -583,7 +604,7 @@ const ProjectDashboard = () => {
               </Tbody>
             </Table>
           </TableContainer>
-        </Box>
+        </Box>}
       </Box>
 
       {/* Fixed right-side box */}
