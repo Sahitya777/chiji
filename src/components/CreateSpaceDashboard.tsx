@@ -267,6 +267,7 @@ const CreateSpaceDashboard = () => {
              {adminAddresses.length>0 &&<Box mt="1rem" display="flex" flexDirection="column" gap="1rem">
              {adminAddresses.map((admin:any,index:number)=>(
               <Box
+                key={index}
                 display="flex"
                 alignItems="center"
                 gap="0.5rem"
@@ -357,6 +358,7 @@ const CreateSpaceDashboard = () => {
             {authorAddresses.length>0&&<Box mt="1rem" display="flex" flexDirection="column" gap="1rem">
               {authorAddresses.map((author:any,index:number)=>(
                 <Box
+                key={index}
                 display="flex"
                 alignItems="center"
                 gap="0.5rem"
