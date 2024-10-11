@@ -2,7 +2,7 @@ import { Box, Button, SimpleGrid } from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useAccount, useSignMessage } from "wagmi";
+import { useAccount, useSignMessage, useSignTypedData } from "wagmi";
 
 const SpacesDashboard = () => {
   const [spaces, setSpaces] = useState([
@@ -12,9 +12,10 @@ const SpacesDashboard = () => {
     { name: "Avnu", members: 70,id:'' },
     { name: "Avnu", members: 70,id:'' },
   ]); // Example array of 20 items
-  const { signMessage } = useSignMessage();
+  const {signTypedData,data}=useSignTypedData()
   const router = useRouter();
   const {address}=useAccount()
+  console.log(data,'kk')
 
   return (
     <Box display="flex" width="100%" padding="2rem" pt="5rem">
@@ -67,7 +68,31 @@ const SpacesDashboard = () => {
                 borderRadius={"6px"}
                 onClick={(event) => {
                   event.stopPropagation(); // Prevents the Box's onClick from being triggered
-                  signMessage({ message: "hello world" });
+                  signTypedData({
+                    types: {
+                      Person: [
+                        { name: 'name', type: 'string' },
+                        { name: 'wallet', type: 'address' },
+                      ],
+                      Mail: [
+                        { name: 'from', type: 'Person' },
+                        { name: 'to', type: 'Person' },
+                        { name: 'contents', type: 'string' },
+                      ],
+                    },
+                    primaryType: 'Mail',
+                    message: {
+                      from: {
+                        name: 'Cow',
+                        wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+                      },
+                      to: {
+                        name: 'Bob',
+                        wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+                      },
+                      contents: 'Hello, Bob!',
+                    },
+                  })
                 }}
               >
                 Join

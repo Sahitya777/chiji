@@ -28,6 +28,9 @@ const Navbar = () => {
             router.push('/')
         }}>Logo</Box>
         <Box display="flex" gap="1rem">
+        <Box color={router.pathname==='/'? '#3FE0B2':"#C9D3EE"} fontSize="18px" onClick={()=>{
+            router.replace('/')
+          }} cursor="pointer" _hover={{color:'white'}} fontWeight="500">Home</Box>
           <Box color={router.pathname==='/createSpace'? '#3FE0B2':"#C9D3EE"} fontSize="18px" onClick={()=>{
             router.replace('/createSpace')
           }} cursor="pointer" _hover={{color:'white'}} fontWeight="500">Create Spaces</Box>
