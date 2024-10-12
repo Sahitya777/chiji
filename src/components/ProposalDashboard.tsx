@@ -20,6 +20,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import BackIcon from "@/assets/icons/BackIcon";
 import { useRouter } from "next/router";
+import CastVoteModal from "./modals/CastVoteModal";
 
 const ProposalDashboard = () => {
   const [currentProposalState, setcurrentProposalState] = useState("Active");
@@ -554,89 +555,107 @@ const ProposalDashboard = () => {
             </TableContainer>
           </Box>
         )}
-        {currentProposalState==='Active'&&<Box
-          display="flex"
-          flexDirection="column"
-          gap="1rem"
-          border="1px solid #727DA133"
-          bg="#151621"
-          padding="16px"
-          borderRadius="6px"
-          width="300px"
-        >
-          <Text color="#C9D3EE" fontWeight="700">
-            Cast your vote
-          </Text>
+        {currentProposalState === "Active" && (
           <Box
-            mt="0.5rem"
             display="flex"
-            alignItems="center"
-            justifyContent="center"
-            color="#C9D3EE"
-            border={
-              currentVoteCasting === "for"
-                ? "1px solid white"
-                : "1px solid #727DA133"
-            }
+            flexDirection="column"
+            gap="1rem"
+            border="1px solid #727DA133"
+            bg="#151621"
+            padding="16px"
             borderRadius="6px"
-            padding="8px"
-            cursor="pointer"
-            onClick={() => {
-              setcurrentVoteCasting("for");
-            }}
+            width="300px"
           >
-            <Box>
-              <Text>For</Text>
+            <Text color="#C9D3EE" fontWeight="700">
+              Cast your vote
+            </Text>
+            <Box
+              mt="0.5rem"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              color="#C9D3EE"
+              border={
+                currentVoteCasting === "for"
+                  ? "1px solid white"
+                  : "1px solid #727DA133"
+              }
+              borderRadius="6px"
+              padding="8px"
+              cursor="pointer"
+              onClick={() => {
+                setcurrentVoteCasting("for");
+              }}
+            >
+              <Box>
+                <Text>For</Text>
+              </Box>
             </Box>
-          </Box>
-          <Box
-            mt="0.5rem"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            color="#C9D3EE"
-            border={
-              currentVoteCasting === "against"
-                ? "1px solid white"
-                : "1px solid #727DA133"
-            }
-            borderRadius="6px"
-            padding="8px"
-            cursor="pointer"
-            onClick={() => {
-              setcurrentVoteCasting("against");
-            }}
-          >
-            <Box>
-              <Text>Against</Text>
+            <Box
+              mt="0.5rem"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              color="#C9D3EE"
+              border={
+                currentVoteCasting === "against"
+                  ? "1px solid white"
+                  : "1px solid #727DA133"
+              }
+              borderRadius="6px"
+              padding="8px"
+              cursor="pointer"
+              onClick={() => {
+                setcurrentVoteCasting("against");
+              }}
+            >
+              <Box>
+                <Text>Against</Text>
+              </Box>
             </Box>
-          </Box>
-          <Box
-            mt="0.5rem"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            color="#C9D3EE"
-            border={
-              currentVoteCasting === "abstain"
-                ? "1px solid white"
-                : "1px solid #727DA133"
-            }
-            borderRadius="6px"
-            padding="8px"
-            cursor="pointer"
-            onClick={() => {
-              setcurrentVoteCasting("abstain");
-            }}
-          >
-            <Box>
-              <Text>Abstain</Text>
+            <Box
+              mt="0.5rem"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              color="#C9D3EE"
+              border={
+                currentVoteCasting === "abstain"
+                  ? "1px solid white"
+                  : "1px solid #727DA133"
+              }
+              borderRadius="6px"
+              padding="8px"
+              cursor="pointer"
+              onClick={() => {
+                setcurrentVoteCasting("abstain");
+              }}
+            >
+              <Box>
+                <Text>Abstain</Text>
+              </Box>
             </Box>
-          </Box>
-          <Button
+            {currentVoteCasting!=='' ?<CastVoteModal
+              buttonText="Cast Vote"
+              mt="0.5rem"
+              padding="1.2rem"
+              bg="black"
+              width="100%"
+              color="#3FE0B2"
+              height={"2rem"}
+              fontSize={"14px"}
+              lineHeight="14px"
+              border="1px solid #3FE0B2"
+              _hover={{ bg: "#3FE0B2", color: "black" }}
+              borderRadius={"6px"}
+            >
+
+            </CastVoteModal>:
+            <Button
             mt="0.5rem"
             padding="1.2rem"
             bg="black"
+            width="100%"
             color="#3FE0B2"
             height={"2rem"}
             fontSize={"14px"}
@@ -644,10 +663,12 @@ const ProposalDashboard = () => {
             border="1px solid #3FE0B2"
             _hover={{ bg: "#3FE0B2", color: "black" }}
             borderRadius={"6px"}
-          >
-            Cast Vote
-          </Button>
-        </Box>}
+            isDisabled={currentVoteCasting===''}
+            >
+              Cast Vote 
+              </Button>}
+          </Box>
+        )}
       </Box>
     </Box>
   );

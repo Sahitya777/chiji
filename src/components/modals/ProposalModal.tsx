@@ -34,9 +34,10 @@ import Link from "next/link";
 // import CopyToClipboard from "react-copy-to-clipboard";
 
 import { useRouter } from "next/router";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount, useConnect, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import MetamaskIcon from "@/assets/icons/MetamaskIcon";
 import CoinbaseIcon from "@/assets/icons/CoinbaseIcon";
+import { config } from "@/services/wagmi/config";
 const ProposalModal = ({
   buttonText,
   backGroundOverLay,
@@ -51,6 +52,12 @@ const ProposalModal = ({
   } = useConnect();
   const { address } = useAccount();
   const router = useRouter();
+  const { writeContractAsync:writeContractAsyncApprove, data:dataApprove,status:statusApprove } = useWriteContract({
+    config,
+  })
+  const { isLoading:approveLoading, isSuccess:approveSuccess,data } = useWaitForTransactionReceipt({
+    hash: dataApprove,
+  })
 
   // mixpanel.identify("13793");
 
@@ -135,6 +142,7 @@ const ProposalModal = ({
                         placeholder="Enter proposal title"
                         mt="0.2rem"
                         color="white"
+                        border="1px solid #727DA133"
                         _placeholder={{
                           color: "#3E415C",
                           fontSize: ".89rem",
@@ -150,6 +158,7 @@ const ProposalModal = ({
                     <Box mt="1rem">
                       <Text color="#C9D3EE">Description</Text>
                       <Textarea
+                      border="1px solid #727DA133"
                         placeholder="Enter proposal title"
                         mt="0.2rem"
                         color="white"
@@ -165,6 +174,11 @@ const ProposalModal = ({
                         }}
                       />
                     </Box>
+                    <Button mt="0.5rem" onClick={()=>{
+
+                    }}>
+                      Submit
+                    </Button>
                   </Box>
                 </Card>
               </Box>

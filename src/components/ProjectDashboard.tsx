@@ -619,7 +619,7 @@ const ProjectDashboard = () => {
       </Box>
 
       {/* Fixed right-side box */}
-      <Box display="flex" flexDirection="column" gap="2rem" width="200px">
+      <Box display="flex" flexDirection="column" gap="2rem" width="220px">
         <Box>
           <Text fontSize="24px" color="#C9D3EE">
             Project Overview

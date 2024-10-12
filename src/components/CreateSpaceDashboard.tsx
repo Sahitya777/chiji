@@ -1,21 +1,33 @@
 import { Box, Button, Input, Switch, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSignTypedData } from "wagmi";
 import StrategyDashboard from "./modals/StrategyModal";
 
 const CreateSpaceDashboard = () => {
   const { signTypedData } = useSignTypedData();
   const [authorAddresses, setAuthorAddresses] = useState<any>([]);
-  const [adminAddresses, setadminAddresses] = useState<any>([])
+  const [adminAddresses, setadminAddresses] = useState<any>([]);
+  const [finalAdminAddresses, setfinalAdminAddresses] = useState<any>([]);
+  const [spaceName, setspaceName] = useState<string>();
+  const [about, setabout] = useState<string>();
+  const [tokenSymbol, settokenSymbol] = useState<string>();
+  const [tokenAddress, settokenAddress] = useState<string>();
+  const [avatar, setavatar] = useState<any>();
+  const [updatedAdminData, setupdatedAdminData] = useState<boolean>(false);
+  const [optionEditAdminAddresses, setoptionEditAdminAddresses] = useState<boolean>(false)
 
+  useEffect(() => {
+    setfinalAdminAddresses((prevAddresses: any[]) => [...prevAddresses, ...adminAddresses]);
+  }, [updatedAdminData]);
+  
   // Handle adding a new author
   const addAuthor = () => {
     setAuthorAddresses([...authorAddresses, ""]);
   };
 
-  const addAdmin=()=>{
-    setadminAddresses([...adminAddresses,""])
-  }
+  const addAdmin = () => {
+    setadminAddresses([...adminAddresses, ""]);
+  };
 
   // Handle changing an address for an author
   const handleAddressChange = (index: number, value: string) => {
@@ -45,7 +57,13 @@ const CreateSpaceDashboard = () => {
   };
   return (
     <Box display="flex" gap="4rem" width="100%" padding="1rem 4rem" pt="5rem">
-      <Box display="flex" flexDirection="column" mt="1rem" mb="2rem" width="60%">
+      <Box
+        display="flex"
+        flexDirection="column"
+        mt="1rem"
+        mb="2rem"
+        width="60%"
+      >
         <Box>
           <Text fontSize="32px" color="#C9D3EE" fontWeight="500">
             Create a Space
@@ -186,6 +204,30 @@ const CreateSpaceDashboard = () => {
                 borderRadius="16px"
                 padding="8px 16px"
               >
+                <Text whiteSpace="nowrap">Token Address</Text>
+                <Input
+                  placeholder="Basic usage"
+                  border="0px"
+                  _placeholder={{
+                    color: "#3E415C",
+                    fontSize: ".89rem",
+                    fontWeight: "600",
+                    outline: "none",
+                  }}
+                  _focus={{
+                    outline: "0",
+                    boxShadow: "none",
+                  }}
+                />
+              </Box>
+              <Box
+                display="flex"
+                alignItems="center"
+                gap="0.5rem"
+                border="1px solid #727DA133"
+                borderRadius="16px"
+                padding="8px 16px"
+              >
                 <Text>Twitter</Text>
                 <Input
                   placeholder="Basic usage"
@@ -262,42 +304,26 @@ const CreateSpaceDashboard = () => {
             color="#C9D3EE"
           >
             <Box>
-              <Text fontSize="24px">Admins</Text>
+              <Text fontSize="24px">Admins*</Text>
             </Box>
-             {adminAddresses.length>0 &&<Box mt="1rem" display="flex" flexDirection="column" gap="1rem">
-             {adminAddresses.map((admin:any,index:number)=>(
-              <Box
-                key={index}
-                display="flex"
-                alignItems="center"
-                gap="0.5rem"
-                border="1px solid #727DA133"
-                borderRadius="16px"
-                padding="8px 16px"
-              >
-                <Text>
-                  {admin}
-                </Text>
-              </Box>
-             )) }
-            </Box>} 
-            <Box  display="flex" flexDirection="column" gap="1rem">
-              {/* Dynamic rendering of author address boxes */}
-              {adminAddresses.map((address: any, index: number) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  alignItems="center"
-                  gap="0.5rem"
-                  border="1px solid #727DA133"
-                  borderRadius="16px"
-                  padding="8px 16px"
-                >
-                  <Text whiteSpace="nowrap">Admin Address</Text>
+            {adminAddresses.length > 0 && (
+              <Box mt="1rem" display="flex" flexDirection="column" gap="1rem">
+                {adminAddresses.map((admin: any, index: number) => (
+                  <Box
+                    key={index}
+                    display="flex"
+                    alignItems="center"
+                    gap="0.5rem"
+                    border="1px solid #727DA133"
+                    borderRadius="16px"
+                    padding="8px 16px"
+                  >
                   <Input
                     placeholder="0x....ff"
-                    value={address}
-                    onChange={(e) => handleAdminAddressChange(index, e.target.value)}
+                    value={admin}
+                    onChange={(e) =>
+                      handleAdminAddressChange(index, e.target.value)
+                    }
                     border="0px"
                     _placeholder={{
                       color: "#3E415C",
@@ -331,17 +357,20 @@ const CreateSpaceDashboard = () => {
                       />
                     </svg>
                   </Button>
-                </Box>
-              ))}
+                  </Box>
+                ))}
+              </Box>
+            )}
+            <Box display="flex" gap="1rem">
+              <Button
+                mt="1rem"
+                onClick={() => {
+                  addAdmin();
+                }}
+              >
+                + Add Admins
+              </Button>
             </Box>
-            <Button
-              mt="1rem"
-              onClick={() => {
-                addAdmin();
-              }}
-            >
-              + Add Admins 
-            </Button>
           </Box>
         </Box>
         <Box mt="2rem">
@@ -355,39 +384,21 @@ const CreateSpaceDashboard = () => {
             <Box>
               <Text fontSize="24px">Authors</Text>
             </Box>
-            {authorAddresses.length>0&&<Box mt="1rem" display="flex" flexDirection="column" gap="1rem">
-              {authorAddresses.map((author:any,index:number)=>(
-                <Box
-                key={index}
-                display="flex"
-                alignItems="center"
-                gap="0.5rem"
-                border="1px solid #727DA133"
-                borderRadius="16px"
-                padding="8px 16px"
-              >
-                <Text>
-                  author
-                </Text>
-              </Box>
-              )) }
-            </Box>}
-            <Box mt="0rem" display="flex" flexDirection="column" gap="1rem">
-              {/* Dynamic rendering of author address boxes */}
-              {authorAddresses.map((address: any, index: number) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  alignItems="center"
-                  gap="0.5rem"
-                  border="1px solid #727DA133"
-                  borderRadius="16px"
-                  padding="8px 16px"
-                >
-                  <Text whiteSpace="nowrap">Author Address</Text>
-                  <Input
+            {authorAddresses.length > 0 && (
+              <Box mt="1rem" display="flex" flexDirection="column" gap="1rem">
+                {authorAddresses.map((author: any, index: number) => (
+                  <Box
+                    key={index}
+                    display="flex"
+                    alignItems="center"
+                    gap="0.5rem"
+                    border="1px solid #727DA133"
+                    borderRadius="16px"
+                    padding="8px 16px"
+                  >
+                    <Input
                     placeholder="0x....ff"
-                    value={address}
+                    value={author}
                     onChange={(e) => handleAddressChange(index, e.target.value)}
                     border="0px"
                     _placeholder={{
@@ -397,7 +408,7 @@ const CreateSpaceDashboard = () => {
                     }}
                     _focus={{ outline: "0", boxShadow: "none" }}
                   />
-                  <Button
+                                    <Button
                     backgroundColor="#676D9A1A"
                     border="1px solid #676D9A4D"
                     _hover={{ backgroundColor: "transparent" }}
@@ -422,16 +433,17 @@ const CreateSpaceDashboard = () => {
                       />
                     </svg>
                   </Button>
-                </Box>
-              ))}
-            </Box>
+                  </Box>
+                ))}
+              </Box>
+            )}
             <Button
               mt="1rem"
               onClick={() => {
                 addAuthor();
               }}
             >
-              + Add Authors 
+              + Add Authors
             </Button>
           </Box>
         </Box>

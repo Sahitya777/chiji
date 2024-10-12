@@ -1,4 +1,4 @@
-import { Box, Button, SimpleGrid } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid ,Text} from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -6,21 +6,59 @@ import { useAccount, useSignMessage, useSignTypedData } from "wagmi";
 
 const SpacesDashboard = () => {
   const [spaces, setSpaces] = useState([
-    { name: "Avnu", members: 70,id:'Avnu.eth' },
-    { name: "Avnu", members: 70,id:'' },
-    { name: "Avnu", members: 70,id:'' },
-    { name: "Avnu", members: 70,id:'' },
-    { name: "Avnu", members: 70,id:'' },
+    { name: "Avnu", members: 70,id:'Avnu.eth',avatarImage:''},
+    { name: "Avnu", members: 70,id:'Avnu.eth',avatarImage:'' },
+    { name: "Avnu", members: 70,id:'Avnu.eth',avatarImage:''},
+    { name: "Avnu", members: 70,id:'Avnu.eth' ,avatarImage:''},
+    { name: "Avnu", members: 70,id:'Avnu.eth',avatarImage:''},
   ]); // Example array of 20 items
   const {signTypedData,data}=useSignTypedData()
   const router = useRouter();
   const {address}=useAccount()
-  console.log(data,'kk')
+  const [userDetails, setuserDetails] = useState<any>()
 
   return (
     <Box display="flex" width="100%" padding="2rem" pt="5rem">
-      <Box width="20%">hello</Box>
-      <Box width="70%" padding="1rem">
+      <Box
+        width="250px"
+        display="flex"
+        flexDirection="column"
+        gap="1rem"
+        bg="#151621"
+        padding="16px 32px"
+        borderRadius="6px"
+        height="81vh"
+        position="fixed"
+      >
+        <Box display="flex" gap="0.2rem" cursor="pointer">
+          <Box display="flex" justifyContent="center" alignItems="center">
+            {/* <BackIcon /> */}
+          </Box>
+          <Box
+            color="#C9D3EE"
+            fontSize="18px"
+            onClick={() => {
+              router.push(`/protocol/${router.query.id}`);
+            }}
+          >
+            All Protocols
+          </Box>
+        </Box>
+        <Box height="1px" border="1px solid white"></Box>
+        <Box
+          color="#C9D3EE"
+          onClick={() => {
+            // setprotocolStatus("overview");
+          }}
+          cursor="pointer"
+          bg={"#303646"}
+          padding="8px"
+          borderRadius="6px"
+        >
+          Joined Spaces
+        </Box>
+      </Box>
+      <Box width="70%" padding="1rem" ml="18rem">
         <SimpleGrid columns={4} spacingX={2} spacingY={5}>
           {/* Reduced horizontal spacing with spacingX */}
           {spaces.map((space, index) => (
