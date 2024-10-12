@@ -16,8 +16,9 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useSignTypedData } from "wagmi";
+import { useAccount, useSignTypedData } from "wagmi";
 import ProposalModal from "./modals/ProposalModal";
+import ConnectWallet from "./modals/ConnectWallet";
 
 const ProjectDashboard = () => {
   const router = useRouter();
@@ -133,6 +134,7 @@ const ProjectDashboard = () => {
       statusValue: "author",
     },
   ]);
+  const { address } = useAccount();
   return (
     <Box display="flex" padding="2rem 3rem" gap="2rem" pt="6rem">
       <Box
@@ -205,20 +207,37 @@ const ProjectDashboard = () => {
         >
           Members
         </Box>
-        <ProposalModal
-          buttonText="Create Proposal"
-          width="100%"
-          padding="1.2rem"
-          bg="black"
-          color="#3FE0B2"
-          height={"2rem"}
-          fontSize={"14px"}
-          lineHeight="14px"
-          border="1px solid #3FE0B2"
-          _hover={{ bg: "#3FE0B2", color: "black" }}
-          borderRadius={"6px"}
-          mt="0.5rem"
-        />
+        {address ? (
+          <ProposalModal
+            buttonText="Create Proposal"
+            width="100%"
+            padding="1.2rem"
+            bg="black"
+            color="#3FE0B2"
+            height={"2rem"}
+            fontSize={"14px"}
+            lineHeight="14px"
+            border="1px solid #3FE0B2"
+            _hover={{ bg: "#3FE0B2", color: "black" }}
+            borderRadius={"6px"}
+            mt="0.5rem"
+          />
+        ) : (
+          <ConnectWallet
+            buttonText="Create Proposal"
+            width="100%"
+            padding="1.2rem"
+            bg="black"
+            color="#3FE0B2"
+            height={"2rem"}
+            fontSize={"14px"}
+            lineHeight="14px"
+            border="1px solid #3FE0B2"
+            _hover={{ bg: "#3FE0B2", color: "black" }}
+            borderRadius={"6px"}
+            mt="0.5rem"
+          />
+        )}
       </Box>
 
       {/* Center box with proposals */}
@@ -650,21 +669,39 @@ const ProjectDashboard = () => {
           </Box>
           <Box color={"#C9D3EE"}>100k members</Box>
           <Box color={"#C9D3EE"}>About section</Box>
-          <Button
-            width="100%"
-            padding="1.2rem"
-            bg="black"
-            color="#3FE0B2"
-            height={"2rem"}
-            fontSize={"14px"}
-            lineHeight="14px"
-            border="1px solid #3FE0B2"
-            _hover={{ bg: "#3FE0B2", color: "black" }}
-            borderRadius={"6px"}
-            mt="0.5rem"
-          >
-            Join
-          </Button>
+
+          {address ? (
+            <Button
+              width="100%"
+              padding="1.2rem"
+              bg="black"
+              color="#3FE0B2"
+              height={"2rem"}
+              fontSize={"14px"}
+              lineHeight="14px"
+              border="1px solid #3FE0B2"
+              _hover={{ bg: "#3FE0B2", color: "black" }}
+              borderRadius={"6px"}
+              mt="0.5rem"
+            >
+              Join
+            </Button>
+          ) : (
+            <ConnectWallet
+              buttonText="Join"
+              width="100%"
+              padding="1.2rem"
+              bg="black"
+              color="#3FE0B2"
+              height={"2rem"}
+              fontSize={"14px"}
+              lineHeight="14px"
+              border="1px solid #3FE0B2"
+              _hover={{ bg: "#3FE0B2", color: "black" }}
+              borderRadius={"6px"}
+              mt="0.5rem"
+            />
+          )}
         </Box>
       </Box>
     </Box>

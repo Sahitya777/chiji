@@ -228,6 +228,30 @@ const CreateSpaceDashboard = () => {
                 borderRadius="16px"
                 padding="8px 16px"
               >
+                <Text whiteSpace="nowrap">Governance Contract Address</Text>
+                <Input
+                  placeholder="Basic usage"
+                  border="0px"
+                  _placeholder={{
+                    color: "#3E415C",
+                    fontSize: ".89rem",
+                    fontWeight: "600",
+                    outline: "none",
+                  }}
+                  _focus={{
+                    outline: "0",
+                    boxShadow: "none",
+                  }}
+                />
+              </Box>
+              <Box
+                display="flex"
+                alignItems="center"
+                gap="0.5rem"
+                border="1px solid #727DA133"
+                borderRadius="16px"
+                padding="8px 16px"
+              >
                 <Text>Twitter</Text>
                 <Input
                   placeholder="Basic usage"

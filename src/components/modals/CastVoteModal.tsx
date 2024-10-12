@@ -48,7 +48,6 @@ const CastVoteModal = ({
   buttonText,
   voteChoice,
   tokenAddress,
-  
   backGroundOverLay,
   ...restProps
 }: any) => {

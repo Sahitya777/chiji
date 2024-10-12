@@ -52,6 +52,40 @@ html, body {
   border-radius: 5px;
 }
 
+/* styles.css */
+.markdown-preview h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+}
+
+.markdown-preview h2 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-preview h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-preview p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-preview ul {
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-preview li {
+  margin-bottom: 0.25rem;
+}
+
+
 /* CSS for dropdown functionality starts */
 .navbar {
   position: relative;

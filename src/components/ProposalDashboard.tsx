@@ -21,6 +21,8 @@ import Image from "next/image";
 import BackIcon from "@/assets/icons/BackIcon";
 import { useRouter } from "next/router";
 import CastVoteModal from "./modals/CastVoteModal";
+import { useAccount } from "wagmi";
+import ConnectWallet from "./modals/ConnectWallet";
 
 const ProposalDashboard = () => {
   const [currentProposalState, setcurrentProposalState] = useState("Active");
@@ -101,6 +103,7 @@ const ProposalDashboard = () => {
       actionPerformed: "YES",
     },
   ]);
+  const { address } = useAccount();
   const [currentVoteCasting, setcurrentVoteCasting] = useState("");
   return (
     <Box display="flex" padding="2rem 3rem" gap="4rem" pt="6rem">
@@ -635,38 +638,56 @@ const ProposalDashboard = () => {
                 <Text>Abstain</Text>
               </Box>
             </Box>
-            {currentVoteCasting!=='' ?<CastVoteModal
-              buttonText="Cast Vote"
-              mt="0.5rem"
-              padding="1.2rem"
-              bg="black"
-              width="100%"
-              color="#3FE0B2"
-              height={"2rem"}
-              fontSize={"14px"}
-              lineHeight="14px"
-              border="1px solid #3FE0B2"
-              _hover={{ bg: "#3FE0B2", color: "black" }}
-              borderRadius={"6px"}
-            >
-
-            </CastVoteModal>:
-            <Button
-            mt="0.5rem"
-            padding="1.2rem"
-            bg="black"
-            width="100%"
-            color="#3FE0B2"
-            height={"2rem"}
-            fontSize={"14px"}
-            lineHeight="14px"
-            border="1px solid #3FE0B2"
-            _hover={{ bg: "#3FE0B2", color: "black" }}
-            borderRadius={"6px"}
-            isDisabled={currentVoteCasting===''}
-            >
-              Cast Vote 
-              </Button>}
+            {currentVoteCasting !== "" ? (
+              address ? (
+                <CastVoteModal
+                  buttonText="Cast Vote"
+                  mt="0.5rem"
+                  padding="1.2rem"
+                  bg="black"
+                  width="100%"
+                  color="#3FE0B2"
+                  height={"2rem"}
+                  fontSize={"14px"}
+                  lineHeight="14px"
+                  border="1px solid #3FE0B2"
+                  _hover={{ bg: "#3FE0B2", color: "black" }}
+                  borderRadius={"6px"}
+                ></CastVoteModal>
+              ) : (
+                <ConnectWallet
+                  buttonText="Cast Vote"
+                  mt="0.5rem"
+                  padding="1.2rem"
+                  bg="black"
+                  width="100%"
+                  color="#3FE0B2"
+                  height={"2rem"}
+                  fontSize={"14px"}
+                  lineHeight="14px"
+                  border="1px solid #3FE0B2"
+                  _hover={{ bg: "#3FE0B2", color: "black" }}
+                  borderRadius={"6px"}
+                />
+              )
+            ) : (
+              <Button
+                mt="0.5rem"
+                padding="1.2rem"
+                bg="black"
+                width="100%"
+                color="#3FE0B2"
+                height={"2rem"}
+                fontSize={"14px"}
+                lineHeight="14px"
+                border="1px solid #3FE0B2"
+                _hover={{ bg: "#3FE0B2", color: "black" }}
+                borderRadius={"6px"}
+                isDisabled={currentVoteCasting === ""}
+              >
+                Cast Vote
+              </Button>
+            )}
           </Box>
         )}
       </Box>

@@ -10,7 +10,7 @@ const Navbar = () => {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
   const [walletDropdown, setwalletDropdown] = useState(false);
-  const router=useRouter()
+  const router = useRouter();
   return (
     <Box
       bgColor="#0B0C14"
@@ -24,19 +24,62 @@ const Navbar = () => {
       padding="12px 32px"
     >
       <Box display="flex" gap="2rem">
-        <Box color="#C9D3EE" fontSize="18px" cursor="pointer" onClick={()=>{
-            router.push('/')
-        }}>Logo</Box>
+        <Box
+          color="#C9D3EE"
+          fontSize="18px"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          cursor="pointer"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          <Image
+            alt=""
+            src={"/chiji_logo.png"}
+            width="70"
+            height="70"
+            style={{ cursor: "pointer", marginLeft: "0.2rem" }}
+          />
+        </Box>
         <Box display="flex" gap="1rem">
-        <Box color={router.pathname==='/'? '#3FE0B2':"#C9D3EE"} fontSize="18px" onClick={()=>{
-            router.replace('/')
-          }} cursor="pointer" _hover={{color:'white'}} fontWeight="500">Home</Box>
-          <Box color={router.pathname==='/createSpace'? '#3FE0B2':"#C9D3EE"} fontSize="18px" onClick={()=>{
-            router.replace('/createSpace')
-          }} cursor="pointer" _hover={{color:'white'}} fontWeight="500">Create Spaces</Box>
-          <Box color={router.pathname==='/enlist'? '#3FE0B2':"#C9D3EE"} fontSize="18px" onClick={()=>{
-            router.replace('/enlist')
-          }} cursor="pointer" _hover={{color:'white'}} fontWeight="500">Enlist</Box>
+          <Box
+            color={router.pathname === "/" ? "#3FE0B2" : "#C9D3EE"}
+            fontSize="18px"
+            onClick={() => {
+              router.replace("/");
+            }}
+            cursor="pointer"
+            _hover={{ color: "white" }}
+            fontWeight="500"
+          >
+            Home
+          </Box>
+          <Box
+            color={router.pathname === "/createSpace" ? "#3FE0B2" : "#C9D3EE"}
+            fontSize="18px"
+            onClick={() => {
+              router.replace("/createSpace");
+            }}
+            cursor="pointer"
+            _hover={{ color: "white" }}
+            fontWeight="500"
+          >
+            Create Spaces
+          </Box>
+          <Box
+            color={router.pathname === "/enlist" ? "#3FE0B2" : "#C9D3EE"}
+            fontSize="18px"
+            onClick={() => {
+              router.replace("/enlist");
+            }}
+            cursor="pointer"
+            _hover={{ color: "white" }}
+            fontWeight="500"
+          >
+            Enlist
+          </Box>
         </Box>
       </Box>
       <Box display="flex" gap="1rem" alignItems="center">
@@ -67,7 +110,7 @@ const Navbar = () => {
               border="1px solid #3FE0B2"
               cursor="pointer"
               padding="4px"
-            //   padding="1.2rem"
+              //   padding="1.2rem"
               gap={2.5}
               onClick={() => {
                 setwalletDropdown(!walletDropdown);
@@ -78,7 +121,7 @@ const Navbar = () => {
                 src={"/base.jpg"}
                 width="16"
                 height="16"
-                style={{ cursor: "pointer",marginLeft:'0.2rem' }}
+                style={{ cursor: "pointer", marginLeft: "0.2rem" }}
               />
               <Text
                 fontSize="14px"
@@ -130,7 +173,9 @@ const Navbar = () => {
             )}
           </Box>
         )}
-        <Box color="#C9D3EE" fontSize="18px" cursor="pointer">Settings</Box>
+        <Box color="#C9D3EE" fontSize="18px" cursor="pointer">
+          Settings
+        </Box>
       </Box>
     </Box>
   );

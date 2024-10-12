@@ -1,3 +1,4 @@
+import Layout from "@/layouts/toasts";
 import { Providers } from "@/services/wagmi/providers";
 import "@/styles/globals.css";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
@@ -74,12 +75,14 @@ export default function App({ Component, pageProps }: AppProps) {
           name="description"
           content=""
         /> */}
-        <link rel="shortcut icon" href="/favicon-32x32.png" />
+        <link rel="shortcut icon" href="/chiji_logo.png" />
       </Head>
       <ChakraProvider theme={theme}>
-        <Providers initialState={pageProps.initialState}>
-          <Component {...pageProps} />
-        </Providers>
+        <Layout>
+          <Providers initialState={pageProps.initialState}>
+            <Component {...pageProps} />
+          </Providers>
+        </Layout>
       </ChakraProvider>
     </>
   );
