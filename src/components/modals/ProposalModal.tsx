@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Modal,
@@ -16,21 +16,135 @@ import {
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import {marked} from "marked"; // Use marked for markdown
-
+import { toast } from 'react-toastify'
+import { useWriteContract } from "wagmi";
+import { config } from "@/services/wagmi/config";
+import governanceAbi from '../../Blockchain/abis/GovernanceContractAbi.json'
+import { baseSepolia } from "viem/chains";
 const ProposalModal = ({
   buttonText,
   backGroundOverLay,
+  governanceContractAddress,
   ...restProps
 }: any) => {
   const [title, setTitle] = useState(""); // Title state
   const [description, setDescription] = useState<any>(""); // Markdown text state
   const [isPreview, setIsPreview] = useState(false); // Toggle for preview mode
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [paramsFilled, setparamsFilled] = useState<boolean>(false)
 
   // Toggle Preview mode
   const togglePreview = () => {
     setIsPreview(!isPreview);
   };
+  const {
+    writeContractAsync: writeContractAsyncApprove,
+    data: dataApprove,
+    status: statusApprove,
+  } = useWriteContract({
+    config,
+  });
+
+  const handleTransaction = async () => {
+    try {
+      {
+        const approve=await writeContractAsyncApprove({
+          abi:governanceAbi,
+          address: governanceContractAddress,
+          functionName: 'propose',
+          args: [
+            [],
+            [],
+            [],
+            description
+          ],
+          chain:baseSepolia
+       })
+       const toastid = toast.info(
+        // `Please wait your transaction is running in background : supply and staking - ${inputAmount} ${currentSelectedCoin} `,
+        `Transaction pending`,
+        {
+          position: 'bottom-right',
+          autoClose: false,
+        }
+      )
+        // const uqID = getUniqueId()
+        // let data: any = localStorage.getItem('transactionCheck')
+        // data = data ? JSON.parse(data) : []
+        // if (data && data.includes(uqID)) {
+        //   dispatch(setTransactionStatus('success'))
+        // }
+        ////console.log("Status transaction", deposit);
+        //console.log(isSuccessDeposit, "success ?");
+      }
+    } catch (err: any) {
+      console.log(err,"err approve")
+      // setTransactionFailed(true);
+      // console.log(err,"approve err")
+      // const uqID = getUniqueId()
+      let data: any = localStorage.getItem('transactionCheck')
+      data = data ? JSON.parse(data) : []
+      if (data) {
+        // setTransactionStarted(false)
+        // dispatch(setTransactionStatus("failed"));
+      }
+      //console.log(uqID, "transaction check supply transaction failed : ", err);
+
+      const toastContent = (
+        <div>
+          Transaction declined{' '}
+          {/* <CopyToClipboard text={err}>
+            <Text as="u">copy error!</Text>
+          </CopyToClipboard> */}
+        </div>
+      )
+      toast.error(toastContent, {
+        position: 'bottom-right',
+        autoClose: false,
+      })
+      //console.log("supply", err);
+      // toast({
+      //   description: "An error occurred while handling the transaction. " + err,
+      //   variant: "subtle",
+      //   position: "bottom-right",
+      //   status: "error",
+      //   isClosable: true,
+      // });
+      // toast({
+      //   variant: "subtle",
+      //   position: "bottom-right",
+      //   render: () => (
+      //     <Box
+      //       display="flex"
+      //       flexDirection="row"
+      //       justifyContent="center"
+      //       alignItems="center"
+      //       bg="rgba(40, 167, 69, 0.5)"
+      //       height="48px"
+      //       borderRadius="6px"
+      //       border="1px solid rgba(74, 194, 107, 0.4)"
+      //       padding="8px"
+      //     >
+      //       <Box>
+      //         <SuccessTick />
+      //       </Box>
+      //       <Text>You have successfully supplied 1000USDT to check go to </Text>
+      //       <Button variant="link">Your Supply</Button>
+      //       <Box>
+      //         <CancelSuccessToast />
+      //       </Box>
+      //     </Box>
+      //   ),
+      //   isClosable: true,
+      // });
+    }
+  }
+
+  useEffect(()=>{
+    if(title!=='' && description!==''){
+      setparamsFilled(true)
+    }
+  },[title,description])
 
   return (
     <div>
@@ -133,7 +247,9 @@ const ProposalModal = ({
                       <Button onClick={togglePreview}>
                         {isPreview ? "Edit" : "Preview"}
                       </Button>
-                      <Button colorScheme="blue">
+                      <Button colorScheme="blue" onClick={()=>{
+                        handleTransaction()
+                      }} isDisabled={!paramsFilled}>
                         Submit
                       </Button>
                     </Box>

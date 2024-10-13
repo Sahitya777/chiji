@@ -579,7 +579,7 @@ const ProposalDashboard = () => {
               justifyContent="center"
               color="#C9D3EE"
               border={
-                currentVoteCasting === "for"
+                currentVoteCasting === "For"
                   ? "1px solid white"
                   : "1px solid #727DA133"
               }
@@ -587,7 +587,7 @@ const ProposalDashboard = () => {
               padding="8px"
               cursor="pointer"
               onClick={() => {
-                setcurrentVoteCasting("for");
+                setcurrentVoteCasting("For");
               }}
             >
               <Box>
@@ -601,7 +601,7 @@ const ProposalDashboard = () => {
               justifyContent="center"
               color="#C9D3EE"
               border={
-                currentVoteCasting === "against"
+                currentVoteCasting === "Against"
                   ? "1px solid white"
                   : "1px solid #727DA133"
               }
@@ -609,7 +609,7 @@ const ProposalDashboard = () => {
               padding="8px"
               cursor="pointer"
               onClick={() => {
-                setcurrentVoteCasting("against");
+                setcurrentVoteCasting("Against");
               }}
             >
               <Box>
@@ -623,7 +623,7 @@ const ProposalDashboard = () => {
               justifyContent="center"
               color="#C9D3EE"
               border={
-                currentVoteCasting === "abstain"
+                currentVoteCasting === "Abstain"
                   ? "1px solid white"
                   : "1px solid #727DA133"
               }
@@ -631,7 +631,7 @@ const ProposalDashboard = () => {
               padding="8px"
               cursor="pointer"
               onClick={() => {
-                setcurrentVoteCasting("abstain");
+                setcurrentVoteCasting("Abstain");
               }}
             >
               <Box>
@@ -641,6 +641,7 @@ const ProposalDashboard = () => {
             {currentVoteCasting !== "" ? (
               address ? (
                 <CastVoteModal
+                  voteChoice={currentVoteCasting}
                   buttonText="Cast Vote"
                   mt="0.5rem"
                   padding="1.2rem"

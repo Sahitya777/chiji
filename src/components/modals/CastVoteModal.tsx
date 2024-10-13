@@ -25,9 +25,9 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-
+import governanceAbi from '../../Blockchain/abis/GovernanceContractAbi.json'
 import Image from "next/image";
-
+import { toast } from 'react-toastify'
 import Link from "next/link";
 
 // import { toast } from "react-toastify";
@@ -44,42 +44,52 @@ import MetamaskIcon from "@/assets/icons/MetamaskIcon";
 import CoinbaseIcon from "@/assets/icons/CoinbaseIcon";
 import { config } from "@/services/wagmi/config";
 import useBalanceofWagmi from "@/Blockchain/hooks/reads/useBalanceOf";
+import { baseSepolia } from "viem/chains";
 const CastVoteModal = ({
   buttonText,
   voteChoice,
   tokenAddress,
+  governanceContractAddress,
+  proposalId,
   backGroundOverLay,
   ...restProps
 }: any) => {
   const [availableDataLoading, setAvailableDataLoading] = useState(true);
   const [walletConnectedRefresh, setWalletConnectedRefresh] = useState(false);
-  const [inputAmount, setinputAmount] = useState<number>(0)
-  const [sliderValue, setSliderValue] = useState(0)
+  const [inputAmount, setinputAmount] = useState<number>(0);
+  const [sliderValue, setSliderValue] = useState(0);
+  const Votecharge:any = {
+    Against: 0,
+    For: 1,
+    Abstain: 2,
+  };
+  function getVoteCharge(voteChoice:any) {
+    return Votecharge[voteChoice];
+  }
   const handleChange = (newValue: any) => {
     // Calculate the percentage of the new value relative to the wallet balance
-    if (newValue > 9_000_000_000) return
+    if (newValue > 9_000_000_000) return;
     // check if newValue is float, if it is then round off to 6 decimals
 
-    var percentage = (newValue * 100) / 30
+    var percentage = (newValue * 100) / 30;
     // if (walletBalance == 0) {
     //   setDepositAmount(0);
     //   setinputAmount(0);
     // }
-    percentage = Math.max(0, percentage)
+    percentage = Math.max(0, percentage);
     if (percentage > 100) {
-      setSliderValue(100)
-      setinputAmount(newValue)
+      setSliderValue(100);
+      setinputAmount(newValue);
     } else {
-      percentage = Math.round(percentage)
+      percentage = Math.round(percentage);
       if (isNaN(percentage)) {
       } else {
-        setSliderValue(percentage)
-        setinputAmount(newValue)
+        setSliderValue(percentage);
+        setinputAmount(newValue);
       }
     }
-  }
-  const balance=useBalanceofWagmi('address')
-  console.log(balance,'v')
+  };
+  const balance = useBalanceofWagmi(tokenAddress);
   const {
     connect: connectWagmi,
     connectors: wagmiConnectors,
@@ -101,6 +111,98 @@ const CastVoteModal = ({
   } = useWaitForTransactionReceipt({
     hash: dataApprove,
   });
+  const handleTransaction = async () => {
+    try {
+      {
+        const approve=await writeContractAsyncApprove({
+          abi:governanceAbi,
+          address: governanceContractAddress,
+          functionName: 'castVote',
+          args: [
+            proposalId,
+            getVoteCharge(voteChoice)
+          ],
+          chain:baseSepolia
+       })
+       const toastid = toast.info(
+        // `Please wait your transaction is running in background : supply and staking - ${inputAmount} ${currentSelectedCoin} `,
+        `Transaction pending`,
+        {
+          position: 'bottom-right',
+          autoClose: false,
+        }
+      )
+        // const uqID = getUniqueId()
+        // let data: any = localStorage.getItem('transactionCheck')
+        // data = data ? JSON.parse(data) : []
+        // if (data && data.includes(uqID)) {
+        //   dispatch(setTransactionStatus('success'))
+        // }
+        ////console.log("Status transaction", deposit);
+        //console.log(isSuccessDeposit, "success ?");
+      }
+    } catch (err: any) {
+      console.log(err,"err approve")
+      // setTransactionFailed(true);
+      // console.log(err,"approve err")
+      // const uqID = getUniqueId()
+      let data: any = localStorage.getItem('transactionCheck')
+      data = data ? JSON.parse(data) : []
+      if (data) {
+        // setTransactionStarted(false)
+        // dispatch(setTransactionStatus("failed"));
+      }
+      //console.log(uqID, "transaction check supply transaction failed : ", err);
+
+      const toastContent = (
+        <div>
+          Transaction declined{' '}
+          {/* <CopyToClipboard text={err}>
+            <Text as="u">copy error!</Text>
+          </CopyToClipboard> */}
+        </div>
+      )
+      toast.error(toastContent, {
+        position: 'bottom-right',
+        autoClose: false,
+      })
+      //console.log("supply", err);
+      // toast({
+      //   description: "An error occurred while handling the transaction. " + err,
+      //   variant: "subtle",
+      //   position: "bottom-right",
+      //   status: "error",
+      //   isClosable: true,
+      // });
+      // toast({
+      //   variant: "subtle",
+      //   position: "bottom-right",
+      //   render: () => (
+      //     <Box
+      //       display="flex"
+      //       flexDirection="row"
+      //       justifyContent="center"
+      //       alignItems="center"
+      //       bg="rgba(40, 167, 69, 0.5)"
+      //       height="48px"
+      //       borderRadius="6px"
+      //       border="1px solid rgba(74, 194, 107, 0.4)"
+      //       padding="8px"
+      //     >
+      //       <Box>
+      //         <SuccessTick />
+      //       </Box>
+      //       <Text>You have successfully supplied 1000USDT to check go to </Text>
+      //       <Button variant="link">Your Supply</Button>
+      //       <Box>
+      //         <CancelSuccessToast />
+      //       </Box>
+      //     </Box>
+      //   ),
+      //   isClosable: true,
+      // });
+    }
+  }
 
   // mixpanel.identify("13793");
 
@@ -195,115 +297,11 @@ const CastVoteModal = ({
                       <Text color="#727DA1">20k AAVE</Text>
                     </Box>
                     <Box display="flex" flexDirection="column" mt="1rem">
-                      <Box display='flex' justifyContent="space-between">
-                        <Text color='#727DA1'>
-                          Add Votes
-                        </Text>
-                        <Text color='#727DA1'>
-                          Balance:
-                        </Text>
+                      <Box display="flex" justifyContent="space-between">
+                        <Text color="#727DA1">Voting Power</Text>
+                        <Text color="#727DA1">Balance: 20</Text>
                       </Box>
-                      <Box
-                        width="100%"
-                        color="white"
-                        borderRadius="6px"
-                        display="flex"
-                        justifyContent="space-between"
-                        mt="0.3rem"
-                        border="1px solid white"
-                      >
-                        <NumberInput
-                          border="0px"
-                          min={0}
-                          keepWithinRange={true}
-                          onChange={handleChange}
-                          value={inputAmount ? inputAmount : ''}
-                          outline="none"
-                          precision={1}
-                          step={parseFloat(`${inputAmount <= 99999 ? 0.1 : 0}`)}
-                          // isDisabled={transactionStarted == true}
-                          _disabled={{ cursor: "pointer" }}
-                        >
-                          <NumberInputField
-                            _disabled={{ color: "#00D395" }}
-                            border="0px"
-                            _placeholder={{
-                              color: "#3E415C",
-                              fontSize: ".89rem",
-                              fontWeight: "600",
-                              outline: "none",
-                            }}
-                            _focus={{
-                              outline: "0",
-                              boxShadow: "none",
-                            }}
-                          />
-                        </NumberInput>
-                      </Box>
-                      
-                <Box
-                  pt={5}
-                  pb={2}
-                  pr="0.5"
-                  mt="1rem"
-                  // width={`${sliderValue > 86 ? "96%" : "100%"}`}
-                  // mr="auto"
-                  // transition="ease-in-out"
-                  display="flex"
-                >
-                  <Slider
-                    aria-label="slider-ex-6"
-                    defaultValue={sliderValue}
-                    value={sliderValue}
-                    onChange={(val) => {
-                      setSliderValue(val)
-                      var ans = (val / 100) * 40
-                      ////console.log(ans);
-                      if (val == 100) {
-                        setinputAmount(40)
-                      } else {
-                        // ans = Math.round(ans * 100) / 100;
-                        if (ans < 10) {
-                          setinputAmount(parseFloat(ans.toFixed(7)))
-                        } else {
-                          ans = Math.round(ans * 100) / 100
-                          setinputAmount(ans)
-                        }
-                        ////console.log(ans)
-                        // dispatch(setInputSupplyAmount(ans));
-                      }
-                    }}
-                    // isDisabled={transactionStarted == true}
-                    _disabled={{ cursor: 'pointer' }}
-                    focusThumbOnChange={false}
-                  >
-                
 
-                    <SliderMark
-                      value={30}
-                      textAlign="center"
-                      color="white"
-                      mt="-8"
-                      // ml={sliderValue !== 100 ? '-5' : '-6'}
-                      w="12"
-                      fontSize="12px"
-                      fontWeight="400"
-                      lineHeight="20px"
-                      letterSpacing="0.25px"
-                    >
-                      {/* {sliderValue}% */}
-                    </SliderMark>
-
-                    <SliderTrack bg="#3E415C">
-                      <SliderFilledTrack
-                        bg="white"
-                        // w={`${sliderValue}`}
-                        _disabled={{ bg: 'white' }}
-                      />
-                    </SliderTrack>
-                    <SliderThumb />
-                  </Slider>
-                </Box>
                     </Box>
                     <Box
                       display="flex"
@@ -311,7 +309,9 @@ const CastVoteModal = ({
                       width="100%"
                       justifyContent="center"
                     >
-                      <Button mt="1rem" width="100%" onClick={() => {}}>
+                      <Button mt="1rem" width="100%" onClick={() => {
+                        handleTransaction()
+                      }}>
                         Cast Vote
                       </Button>
                     </Box>
