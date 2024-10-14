@@ -6,6 +6,8 @@ import { config } from "@/services/wagmi/config";
 import beckonproxyAbi from "../Blockchain/abis/beakonproxyAbi.json";
 import { baseSepolia } from "viem/chains";
 import { toast } from "react-toastify";
+import { beaconFactoryAddress } from "@/constants/base-constants";
+import GovernanceTokenModal from "./modals/GovernanceTokenModal";
 const EnlistDashboard = () => {
   const { signTypedData } = useSignTypedData();
   const [executorAddresses, setexecutorAddresses] = useState<any>([]);
@@ -27,6 +29,14 @@ const EnlistDashboard = () => {
     writeContractAsync: writeContractAsyncApprove,
     data: dataApprove,
     status: statusApprove,
+  } = useWriteContract({
+    config,
+  });
+
+  const {
+    writeContractAsync: writeContractAsync,
+    data: dataToken,
+    status: statusToken,
   } = useWriteContract({
     config,
   });
@@ -68,7 +78,7 @@ const EnlistDashboard = () => {
       {
         const approve = await writeContractAsyncApprove({
           abi: beckonproxyAbi,
-          address: "0x03F7f254cC7442045cbBbC16b268cbF87608659D",
+          address: beaconFactoryAddress as any,
           functionName: "createProxy",
           args: [
             {
@@ -340,6 +350,19 @@ const EnlistDashboard = () => {
                     outline: "0",
                     boxShadow: "none",
                   }}
+                />
+                <GovernanceTokenModal
+                  buttonText="Deploy token"
+                  padding="1.2rem"
+                  bg="black"
+                  width="100%"
+                  color="#3FE0B2"
+                  height={"2rem"}
+                  fontSize={"14px"}
+                  lineHeight="14px"
+                  border="1px solid #3FE0B2"
+                  _hover={{ bg: "#3FE0B2", color: "black" }}
+                  borderRadius={"6px"}
                 />
               </Box>
               <Box
