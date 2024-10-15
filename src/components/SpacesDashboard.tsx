@@ -2,8 +2,9 @@ import { Box, Button, SimpleGrid ,Text} from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useAccount, useSignMessage, useSignTypedData } from "wagmi";
-
+import { baseSepolia } from "viem/chains";
+import { useAccount, useEnsName, useSignMessage, useSignTypedData } from "wagmi";
+import { useAvatar, useName } from '@coinbase/onchainkit/identity';
 const SpacesDashboard = () => {
   const [spaces, setSpaces] = useState([
     { name: "Avnu", members: 70,id:'Avnu.eth',avatarImage:''},
@@ -16,7 +17,50 @@ const SpacesDashboard = () => {
   const router = useRouter();
   const {address}=useAccount()
   const [userDetails, setuserDetails] = useState<any>()
-
+  const addNetwork = async () => {
+    try {
+      // Check if window.ethereum is available
+      if (window.ethereum) {
+        let provider;
+  
+        // Check if multiple providers are present (MetaMask, Coinbase, etc.)
+        if (window.ethereum.providers && window.ethereum.providers.length) {
+          // Try to find the Coinbase Wallet provider
+          provider = window.ethereum.providers.find((p: any) => p.isCoinbaseWallet) || window.ethereum.providers.find((p:any) => p.isMetaMask) || window.ethereum;
+        } else {
+          // Fallback to the default provider if there's no array of providers
+          provider = window.ethereum;
+        }
+  
+        // Log the detected provider to help troubleshoot
+        console.log('Using provider:', provider.isCoinbaseWallet ? 'Coinbase Wallet' : provider.isMetaMask ? 'MetaMask' : 'Other');
+  
+        // Request to add the network using the detected provider
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x14a34', // Chain ID for Base Sepolia
+              chainName: 'Base Sepolia',
+              nativeCurrency: {
+                name: 'SepoliaETH',
+                symbol: 'ETH', // Symbol for Sepolia ETH
+                decimals: 18,
+              },
+              rpcUrls: ['https://sepolia.base.org'], // Replace with the actual RPC URL
+              blockExplorerUrls: ['https://sepolia.etherscan.io'], // Replace with the actual block explorer URL
+            },
+          ],
+        });
+  
+      } else {
+        console.error('No Ethereum provider found. Please install MetaMask or Coinbase Wallet.');
+      }
+    } catch (error) {
+      console.error('Failed to add network:', error);
+    }
+  };
+  const { data: name, isLoading: nameIsLoading } =  useName({ address:address as any, chain: baseSepolia as any });
   return (
     <Box display="flex" width="100%" padding="2rem" pt="5rem">
       <Box

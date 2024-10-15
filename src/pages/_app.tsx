@@ -4,7 +4,8 @@ import "@/styles/globals.css";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-
+import { OnchainKitProvider } from '@coinbase/onchainkit'; 
+import { baseSepolia } from "viem/chains";
 export const theme = extendTheme({
   components: {
     Tabs: {
@@ -79,9 +80,15 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ChakraProvider theme={theme}>
         <Layout>
+        <OnchainKitProvider
+          apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
+          chain={baseSepolia as any}
+        >
           <Providers initialState={pageProps.initialState}>
             <Component {...pageProps} />
           </Providers>
+
+        </OnchainKitProvider>
         </Layout>
       </ChakraProvider>
     </>
