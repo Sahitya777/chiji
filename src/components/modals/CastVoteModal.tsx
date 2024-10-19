@@ -25,10 +25,11 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import governanceAbi from '../../Blockchain/abis/GovernanceContractAbi.json'
+import governanceAbi from "../../Blockchain/abis/GovernanceContractAbi.json";
 import Image from "next/image";
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify";
 import Link from "next/link";
+import governanceTokenAbi from "../../Blockchain/abis/GovernanceTokenAbi.json";
 
 // import { toast } from "react-toastify";
 // import CopyToClipboard from "react-copy-to-clipboard";
@@ -37,6 +38,7 @@ import { useRouter } from "next/router";
 import {
   useAccount,
   useConnect,
+  useReadContract,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
@@ -45,6 +47,11 @@ import CoinbaseIcon from "@/assets/icons/CoinbaseIcon";
 import { config } from "@/services/wagmi/config";
 import useBalanceofWagmi from "@/Blockchain/hooks/reads/useBalanceOf";
 import { baseSepolia } from "viem/chains";
+import {
+  readBalance,
+  readDelegateLimit,
+} from "@/Blockchain/scripts/governanceCalls";
+import numberFormatter from "@/constants/numberFormatter";
 const CastVoteModal = ({
   buttonText,
   voteChoice,
@@ -58,12 +65,28 @@ const CastVoteModal = ({
   const [walletConnectedRefresh, setWalletConnectedRefresh] = useState(false);
   const [inputAmount, setinputAmount] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState(0);
-  const Votecharge:any = {
+  const [balance, setbalance] = useState<number>(0);
+  const [delegatedAddress, setdelegatedAddress] = useState<string>("");
+  const Votecharge: any = {
     Against: 0,
     For: 1,
     Abstain: 2,
   };
-  function getVoteCharge(voteChoice:any) {
+  const { address } = useAccount();
+  useEffect(() => {
+    const fetchValues = async () => {
+      const res = await readDelegateLimit(tokenAddress, address as string);
+      const res2 = await readBalance(tokenAddress, address as string);
+      if (res) {
+        setdelegatedAddress(res);
+      }
+      if (res2) {
+        setbalance(res2);
+      }
+    };
+    fetchValues();
+  }, [address, tokenAddress]);
+  function getVoteCharge(voteChoice: any) {
     return Votecharge[voteChoice];
   }
   const handleChange = (newValue: any) => {
@@ -89,13 +112,11 @@ const CastVoteModal = ({
       }
     }
   };
-  const balance = useBalanceofWagmi(tokenAddress);
   const {
     connect: connectWagmi,
     connectors: wagmiConnectors,
     error,
   } = useConnect();
-  const { address } = useAccount();
   const router = useRouter();
   const {
     writeContractAsync: writeContractAsyncApprove,
@@ -114,24 +135,21 @@ const CastVoteModal = ({
   const handleTransaction = async () => {
     try {
       {
-        const approve=await writeContractAsyncApprove({
-          abi:governanceAbi,
+        const approve = await writeContractAsyncApprove({
+          abi: governanceAbi,
           address: governanceContractAddress,
-          functionName: 'castVote',
-          args: [
-            proposalId,
-            getVoteCharge(voteChoice)
-          ],
-          chain:baseSepolia
-       })
-       const toastid = toast.info(
-        // `Please wait your transaction is running in background : supply and staking - ${inputAmount} ${currentSelectedCoin} `,
-        `Transaction pending`,
-        {
-          position: 'bottom-right',
-          autoClose: false,
-        }
-      )
+          functionName: "castVote",
+          args: [proposalId, getVoteCharge(voteChoice)],
+          chain: baseSepolia,
+        });
+        const toastid = toast.info(
+          // `Please wait your transaction is running in background : supply and staking - ${inputAmount} ${currentSelectedCoin} `,
+          `Transaction pending`,
+          {
+            position: "bottom-right",
+            autoClose: false,
+          }
+        );
         // const uqID = getUniqueId()
         // let data: any = localStorage.getItem('transactionCheck')
         // data = data ? JSON.parse(data) : []
@@ -142,12 +160,12 @@ const CastVoteModal = ({
         //console.log(isSuccessDeposit, "success ?");
       }
     } catch (err: any) {
-      console.log(err,"err approve")
+      console.log(err, "err approve");
       // setTransactionFailed(true);
       // console.log(err,"approve err")
       // const uqID = getUniqueId()
-      let data: any = localStorage.getItem('transactionCheck')
-      data = data ? JSON.parse(data) : []
+      let data: any = localStorage.getItem("transactionCheck");
+      data = data ? JSON.parse(data) : [];
       if (data) {
         // setTransactionStarted(false)
         // dispatch(setTransactionStatus("failed"));
@@ -156,16 +174,16 @@ const CastVoteModal = ({
 
       const toastContent = (
         <div>
-          Transaction declined{' '}
+          Transaction declined{" "}
           {/* <CopyToClipboard text={err}>
             <Text as="u">copy error!</Text>
           </CopyToClipboard> */}
         </div>
-      )
+      );
       toast.error(toastContent, {
-        position: 'bottom-right',
+        position: "bottom-right",
         autoClose: false,
-      })
+      });
       //console.log("supply", err);
       // toast({
       //   description: "An error occurred while handling the transaction. " + err,
@@ -202,7 +220,96 @@ const CastVoteModal = ({
       //   isClosable: true,
       // });
     }
-  }
+  };
+  const handleDelegate = async () => {
+    try {
+      {
+        const approve = await writeContractAsyncApprove({
+          abi: governanceTokenAbi,
+          address: tokenAddress,
+          functionName: "delegate",
+          args: [address],
+          chain: baseSepolia,
+        });
+        const toastid = toast.info(
+          // `Please wait your transaction is running in background : supply and staking - ${inputAmount} ${currentSelectedCoin} `,
+          `Transaction pending`,
+          {
+            position: "bottom-right",
+            autoClose: false,
+          }
+        );
+        // const uqID = getUniqueId()
+        // let data: any = localStorage.getItem('transactionCheck')
+        // data = data ? JSON.parse(data) : []
+        // if (data && data.includes(uqID)) {
+        //   dispatch(setTransactionStatus('success'))
+        // }
+        ////console.log("Status transaction", deposit);
+        //console.log(isSuccessDeposit, "success ?");
+      }
+    } catch (err: any) {
+      console.log(err, "err approve");
+      // setTransactionFailed(true);
+      // console.log(err,"approve err")
+      // const uqID = getUniqueId()
+      let data: any = localStorage.getItem("transactionCheck");
+      data = data ? JSON.parse(data) : [];
+      if (data) {
+        // setTransactionStarted(false)
+        // dispatch(setTransactionStatus("failed"));
+      }
+      //console.log(uqID, "transaction check supply transaction failed : ", err);
+
+      const toastContent = (
+        <div>
+          Transaction declined{" "}
+          {/* <CopyToClipboard text={err}>
+            <Text as="u">copy error!</Text>
+          </CopyToClipboard> */}
+        </div>
+      );
+      toast.error(toastContent, {
+        position: "bottom-right",
+        autoClose: false,
+      });
+      //console.log("supply", err);
+      // toast({
+      //   description: "An error occurred while handling the transaction. " + err,
+      //   variant: "subtle",
+      //   position: "bottom-right",
+      //   status: "error",
+      //   isClosable: true,
+      // });
+      // toast({
+      //   variant: "subtle",
+      //   position: "bottom-right",
+      //   render: () => (
+      //     <Box
+      //       display="flex"
+      //       flexDirection="row"
+      //       justifyContent="center"
+      //       alignItems="center"
+      //       bg="rgba(40, 167, 69, 0.5)"
+      //       height="48px"
+      //       borderRadius="6px"
+      //       border="1px solid rgba(74, 194, 107, 0.4)"
+      //       padding="8px"
+      //     >
+      //       <Box>
+      //         <SuccessTick />
+      //       </Box>
+      //       <Text>You have successfully supplied 1000USDT to check go to </Text>
+      //       <Button variant="link">Your Supply</Button>
+      //       <Box>
+      //         <CancelSuccessToast />
+      //       </Box>
+      //     </Box>
+      //   ),
+      //   isClosable: true,
+      // });
+    }
+  };
 
   // mixpanel.identify("13793");
 
@@ -293,15 +400,10 @@ const CastVoteModal = ({
                       <Text color="#727DA1">YES</Text>
                     </Box>
                     <Box display="flex" justifyContent="space-between">
-                      <Text color="#C9D3EE">Max Voting Power:</Text>
-                      <Text color="#727DA1">20k AAVE</Text>
-                    </Box>
-                    <Box display="flex" flexDirection="column" mt="1rem">
-                      <Box display="flex" justifyContent="space-between">
-                        <Text color="#727DA1">Voting Power</Text>
-                        <Text color="#727DA1">Balance: 20</Text>
-                      </Box>
-
+                      <Text color="#C9D3EE">Voting Power:</Text>
+                      <Text color="#727DA1">
+                        {numberFormatter(balance)} AAVE
+                      </Text>
                     </Box>
                     <Box
                       display="flex"
@@ -309,11 +411,28 @@ const CastVoteModal = ({
                       width="100%"
                       justifyContent="center"
                     >
-                      <Button mt="1rem" width="100%" onClick={() => {
-                        handleTransaction()
-                      }}>
-                        Cast Vote
-                      </Button>
+                      {delegatedAddress ===
+                      "0x0000000000000000000000000000000000000000" ? (
+                        <Button
+                          width="100%"
+                          onClick={() => {
+                            handleDelegate();
+                          }}
+                        >
+                          Delegate First
+                        </Button>
+                      ) : (
+                        <Button
+                          disabled={balance === 0}
+                          mt="1rem"
+                          width="100%"
+                          onClick={() => {
+                            handleTransaction();
+                          }}
+                        >
+                          Cast Vote
+                        </Button>
+                      )}
                     </Box>
                   </Box>
                 </Card>

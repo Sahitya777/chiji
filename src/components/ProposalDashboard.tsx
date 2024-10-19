@@ -642,6 +642,7 @@ const ProposalDashboard = () => {
               address ? (
                 <CastVoteModal
                   voteChoice={currentVoteCasting}
+                  tokenAddress="0xDbf641F3a981D6Ea74F079C4B989098588De3326"
                   buttonText="Cast Vote"
                   mt="0.5rem"
                   padding="1.2rem"

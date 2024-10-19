@@ -141,97 +141,6 @@ const ProposalModal = ({
       // });
     }
   }
-  const handleDelegate = async () => {
-    try {
-      {
-        const approve=await writeContractAsyncApprove({
-          abi:governanceTokenAbi,
-          address: tokenAddress,
-          functionName: 'delegate',
-          args: [
-            address
-          ],
-          chain:baseSepolia
-       })
-       const toastid = toast.info(
-        // `Please wait your transaction is running in background : supply and staking - ${inputAmount} ${currentSelectedCoin} `,
-        `Transaction pending`,
-        {
-          position: 'bottom-right',
-          autoClose: false,
-        }
-      )
-        // const uqID = getUniqueId()
-        // let data: any = localStorage.getItem('transactionCheck')
-        // data = data ? JSON.parse(data) : []
-        // if (data && data.includes(uqID)) {
-        //   dispatch(setTransactionStatus('success'))
-        // }
-        ////console.log("Status transaction", deposit);
-        //console.log(isSuccessDeposit, "success ?");
-      }
-    } catch (err: any) {
-      console.log(err,"err approve")
-      // setTransactionFailed(true);
-      // console.log(err,"approve err")
-      // const uqID = getUniqueId()
-      let data: any = localStorage.getItem('transactionCheck')
-      data = data ? JSON.parse(data) : []
-      if (data) {
-        // setTransactionStarted(false)
-        // dispatch(setTransactionStatus("failed"));
-      }
-      //console.log(uqID, "transaction check supply transaction failed : ", err);
-
-      const toastContent = (
-        <div>
-          Transaction declined{' '}
-          {/* <CopyToClipboard text={err}>
-            <Text as="u">copy error!</Text>
-          </CopyToClipboard> */}
-        </div>
-      )
-      toast.error(toastContent, {
-        position: 'bottom-right',
-        autoClose: false,
-      })
-      //console.log("supply", err);
-      // toast({
-      //   description: "An error occurred while handling the transaction. " + err,
-      //   variant: "subtle",
-      //   position: "bottom-right",
-      //   status: "error",
-      //   isClosable: true,
-      // });
-      // toast({
-      //   variant: "subtle",
-      //   position: "bottom-right",
-      //   render: () => (
-      //     <Box
-      //       display="flex"
-      //       flexDirection="row"
-      //       justifyContent="center"
-      //       alignItems="center"
-      //       bg="rgba(40, 167, 69, 0.5)"
-      //       height="48px"
-      //       borderRadius="6px"
-      //       border="1px solid rgba(74, 194, 107, 0.4)"
-      //       padding="8px"
-      //     >
-      //       <Box>
-      //         <SuccessTick />
-      //       </Box>
-      //       <Text>You have successfully supplied 1000USDT to check go to </Text>
-      //       <Button variant="link">Your Supply</Button>
-      //       <Box>
-      //         <CancelSuccessToast />
-      //       </Box>
-      //     </Box>
-      //   ),
-      //   isClosable: true,
-      // });
-    }
-  }
 
   useEffect(()=>{
     if(title!=='' && description!==''){
@@ -334,16 +243,6 @@ const ProposalModal = ({
                           />
                         </Box>
                       )}
-                    </Box>
-                    <Box mt="0.5rem" display="flex" justifyContent='space-between'>
-                      <Text>
-                        Don&apos;t have your tokens delegated
-                      </Text>
-                      <Button onClick={()=>{
-                        handleDelegate()
-                      }}>
-                        Delegate
-                      </Button>
                     </Box>
 
                     <Box mt="1rem" display="flex" justifyContent="space-between">
