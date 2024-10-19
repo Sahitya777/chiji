@@ -337,7 +337,7 @@ const ProposalModal = ({
                     </Box>
                     <Box mt="0.5rem" display="flex" justifyContent='space-between'>
                       <Text>
-                        Don't have your tokens delegated
+                        Don&apos;t have your tokens delegated
                       </Text>
                       <Button onClick={()=>{
                         handleDelegate()
