@@ -78,7 +78,7 @@ const EnlistDashboard = () => {
       {
         const approve = await writeContractAsyncApprove({
           abi: beckonproxyAbi,
-          address: beaconFactoryAddress as any,
+          address: '0xDbf641F3a981D6Ea74F079C4B989098588De3326',
           functionName: "createProxy",
           args: [
             {
@@ -90,11 +90,9 @@ const EnlistDashboard = () => {
             {
               name: governancename, // Custom governor name
               token: governanceTokenAddress, // Address of the voting token (IVotes)
-              tokenClockMode: {
                 initialVotingDelay: initialVotingDelay, // Example value in seconds or blocks
                 initialVotingPeriod: initialVotingPeriod, // Example value in blocks
-                initialProposalThreshold: initialProposalThreshold, // Example value in tokens
-              }, // The token clock mode initialized above
+                initialProposalThreshold: initialProposalThreshold, // Example value in tokens // The token clock mode initialized above
               quorum: quorum, // Quorum value (e.g., number of tokens required for quorum)
               initialOwner: initialOwnerAddress, // Address of the initial owner of the governo/
             },
@@ -693,7 +691,7 @@ const EnlistDashboard = () => {
           border="1px solid #3FE0B2"
           _hover={{ bg: "#3FE0B2", color: "black" }}
           borderRadius={"6px"}
-          isDisabled={!transactionDetailsFullfiled}
+          // isDisabled={!transactionDetailsFullfiled}
           onClick={() => {
             handleTransaction();
           }}

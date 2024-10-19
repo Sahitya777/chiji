@@ -1,244 +1,169 @@
 [
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_beaconImpl",
-                "type": "address"
-            }
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_beaconImpl", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "name": "BeaconImplInvalid", "type": "error" },
+  { "inputs": [], "name": "BeaconProxyDeployFailed", "type": "error" },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "emitter",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "contractAddress",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "timelockContract",
+        "type": "address"
+      }
+    ],
+    "name": "ContractDeployed",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_salt", "type": "bytes32" }
+    ],
+    "name": "_create",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "createdContract_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "beacon",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_salt", "type": "bytes32" }
+    ],
+    "name": "calculateExpectedAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "expectedAddress_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_user", "type": "address" },
+      { "internalType": "bytes32", "name": "_userSalt", "type": "bytes32" }
+    ],
+    "name": "calculateExpectedAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "expectedAddress_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "admin", "type": "address" },
+          { "internalType": "uint256", "name": "minDelay", "type": "uint256" },
+          {
+            "internalType": "address[]",
+            "name": "proposers",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "executors",
+            "type": "address[]"
+          }
         ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "inputs": [],
-        "name": "BeaconImplInvalid",
-        "type": "error"
-    },
-    {
-        "inputs": [],
-        "name": "BeaconProxyDeployFailed",
-        "type": "error"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "contractAddress",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "timelockContract",
-                "type": "address"
-            }
+        "internalType": "struct TimelockParams",
+        "name": "_timeLockParams",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          { "internalType": "string", "name": "name", "type": "string" },
+          { "internalType": "address", "name": "token", "type": "address" },
+          {
+            "internalType": "uint48",
+            "name": "initialVotingDelay",
+            "type": "uint48"
+          },
+          {
+            "internalType": "uint32",
+            "name": "initialVotingPeriod",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "initialProposalThreshold",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "quorum", "type": "uint256" },
+          {
+            "internalType": "address",
+            "name": "initialOwner",
+            "type": "address"
+          }
         ],
-        "name": "ContractDeployed",
-        "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "bytes32",
-                "name": "_salt",
-                "type": "bytes32"
-            }
-        ],
-        "name": "_create",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "createdContract_",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "beacon",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "bytes32",
-                "name": "_salt",
-                "type": "bytes32"
-            }
-        ],
-        "name": "calculateExpectedAddress",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "expectedAddress_",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_user",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "_userSalt",
-                "type": "bytes32"
-            }
-        ],
-        "name": "calculateExpectedAddress",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "expectedAddress_",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "address",
-                        "name": "admin",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "minDelay",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "address[]",
-                        "name": "proposers",
-                        "type": "address[]"
-                    },
-                    {
-                        "internalType": "address[]",
-                        "name": "executors",
-                        "type": "address[]"
-                    }
-                ],
-                "internalType": "struct TimelockParams",
-                "name": "_timeLockParams",
-                "type": "tuple"
-            },
-            {
-                "components": [
-                    {
-                        "internalType": "string",
-                        "name": "name",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "token",
-                        "type": "address"
-                    },
-                    {
-                        "components": [
-                            {
-                                "internalType": "uint48",
-                                "name": "initialVotingDelay",
-                                "type": "uint48"
-                            },
-                            {
-                                "internalType": "uint32",
-                                "name": "initialVotingPeriod",
-                                "type": "uint32"
-                            },
-                            {
-                                "internalType": "uint256",
-                                "name": "initialProposalThreshold",
-                                "type": "uint256"
-                            }
-                        ],
-                        "internalType": "struct TokenClockMode",
-                        "name": "tokenClockMode",
-                        "type": "tuple"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "quorum",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "initialOwner",
-                        "type": "address"
-                    }
-                ],
-                "internalType": "struct GovernorParams",
-                "name": "_govParams",
-                "type": "tuple"
-            }
-        ],
-        "name": "createProxy",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "createdContract_",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_user",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "_userSalt",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getSalt",
-        "outputs": [
-            {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "pure",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "proxyHash",
-        "outputs": [
-            {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    }
+        "internalType": "struct GovernorParams",
+        "name": "_govParams",
+        "type": "tuple"
+      }
+    ],
+    "name": "createProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "createdContract_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_user", "type": "address" },
+      { "internalType": "bytes32", "name": "_userSalt", "type": "bytes32" }
+    ],
+    "name": "getSalt",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxyHash",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
 ]

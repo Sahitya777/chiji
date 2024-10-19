@@ -1,6 +1,6 @@
 {
     "base-sepolia":{
         "governanceTokenContract":"0xC51197e0BD90257d6625D696230c52B8109480B6",
-        "beackonFactory":"0x03F7f254cC7442045cbBbC16b268cbF87608659D"
+        "beackonFactory":"0xB211Ed715e0cff1283cF3c8c4F15a9b1E78F8A6b"
     }
 }

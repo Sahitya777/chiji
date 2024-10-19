@@ -2,24 +2,31 @@ import { Box, Button, Input, Switch, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSignTypedData } from "wagmi";
 import StrategyDashboard from "./modals/StrategyModal";
-
+import axios from "axios";
+import { governorTokenContractAddress } from "@/constants/base-constants";
 const CreateSpaceDashboard = () => {
   const { signTypedData } = useSignTypedData();
   const [authorAddresses, setAuthorAddresses] = useState<any>([]);
   const [adminAddresses, setadminAddresses] = useState<any>([]);
   const [finalAdminAddresses, setfinalAdminAddresses] = useState<any>([]);
-  const [spaceName, setspaceName] = useState<string>();
-  const [about, setabout] = useState<string>();
-  const [tokenSymbol, settokenSymbol] = useState<string>();
-  const [tokenAddress, settokenAddress] = useState<string>();
-  const [avatar, setavatar] = useState<any>();
+  const [spaceName, setspaceName] = useState<string>("");
+  const [about, setabout] = useState<string>("");
+  const [tokenSymbol, settokenSymbol] = useState<string>("");
+  const [tokenAddress, settokenAddress] = useState<string>("");
+  const [avatar, setavatar] = useState<any>("");
   const [updatedAdminData, setupdatedAdminData] = useState<boolean>(false);
-  const [optionEditAdminAddresses, setoptionEditAdminAddresses] = useState<boolean>(false)
+  const [optionEditAdminAddresses, setoptionEditAdminAddresses] =
+    useState<boolean>(false);
+  const [governanceContractAddress, setgovernanceContractAddress] =
+    useState("");
 
   useEffect(() => {
-    setfinalAdminAddresses((prevAddresses: any[]) => [...prevAddresses, ...adminAddresses]);
+    setfinalAdminAddresses((prevAddresses: any[]) => [
+      ...prevAddresses,
+      ...adminAddresses,
+    ]);
   }, [updatedAdminData]);
-  
+
   // Handle adding a new author
   const addAuthor = () => {
     setAuthorAddresses([...authorAddresses, ""]);
@@ -55,6 +62,27 @@ const CreateSpaceDashboard = () => {
     );
     setadminAddresses(updatedAuthors);
   };
+  // const handleSpace = async () => {
+  //   try {
+  //     const res = await axios.post(
+  //       "https://5e27-106-51-118-108.ngrok-free.app/api/create/space",
+  //       {
+  //         id:20,
+  //         name:spaceName, // space name string
+  //         about:about, // about string
+  //         symbol:tokenSymbol, // token symbol string
+  //         token_address:tokenAddress,
+  //         governor_contract_address:governorTokenContractAddress, // token address string
+  //         avatar:avatar, // avatar (can be a string or file, depending on how you're handling it)
+  //         authors:authorAddresses, // array of author addresses
+  //         admins:finalAdminAddresses, // array of admin addresses
+  //       }
+  //     );
+  //     console.log(res?.data, "response data");
+  //   } catch (error) {
+  //     console.error("Error creating space:", error);
+  //   }
+  // };
   return (
     <Box display="flex" gap="4rem" width="100%" padding="1rem 4rem" pt="5rem">
       <Box
@@ -91,6 +119,10 @@ const CreateSpaceDashboard = () => {
               >
                 <Text>Name</Text>
                 <Input
+                  value={spaceName}
+                  onChange={(e) => {
+                    setspaceName(e.target.value);
+                  }}
                   placeholder="Basic usage"
                   border="0px"
                   _placeholder={{
@@ -115,6 +147,10 @@ const CreateSpaceDashboard = () => {
               >
                 <Text>About</Text>
                 <Input
+                  value={about}
+                  onChange={(e) => {
+                    setabout(e.target.value);
+                  }}
                   placeholder="Basic usage"
                   border="0px"
                   _placeholder={{
@@ -139,6 +175,10 @@ const CreateSpaceDashboard = () => {
               >
                 <Text>Avatar</Text>
                 <Input
+                  value={avatar}
+                  onChange={(e) => {
+                    setavatar(e.target.value);
+                  }}
                   placeholder="Basic usage"
                   border="0px"
                   _placeholder={{
@@ -182,6 +222,10 @@ const CreateSpaceDashboard = () => {
               >
                 <Text>Symbol</Text>
                 <Input
+                  value={tokenSymbol}
+                  onChange={(e) => {
+                    settokenSymbol(e.target.value);
+                  }}
                   placeholder="Basic usage"
                   border="0px"
                   _placeholder={{
@@ -206,6 +250,10 @@ const CreateSpaceDashboard = () => {
               >
                 <Text whiteSpace="nowrap">Token Address</Text>
                 <Input
+                  value={tokenAddress}
+                  onChange={(e) => {
+                    settokenAddress(e.target.value);
+                  }}
                   placeholder="Basic usage"
                   border="0px"
                   _placeholder={{
@@ -230,6 +278,10 @@ const CreateSpaceDashboard = () => {
               >
                 <Text whiteSpace="nowrap">Governance Contract Address</Text>
                 <Input
+                  value={governanceContractAddress}
+                  onChange={(e) => {
+                    setgovernanceContractAddress(e.target.value);
+                  }}
                   placeholder="Basic usage"
                   border="0px"
                   _placeholder={{
@@ -342,45 +394,45 @@ const CreateSpaceDashboard = () => {
                     borderRadius="16px"
                     padding="8px 16px"
                   >
-                  <Input
-                    placeholder="0x....ff"
-                    value={admin}
-                    onChange={(e) =>
-                      handleAdminAddressChange(index, e.target.value)
-                    }
-                    border="0px"
-                    _placeholder={{
-                      color: "#3E415C",
-                      fontSize: ".89rem",
-                      fontWeight: "600",
-                    }}
-                    _focus={{ outline: "0", boxShadow: "none" }}
-                  />
-                  <Button
-                    backgroundColor="#676D9A1A"
-                    border="1px solid #676D9A4D"
-                    _hover={{ backgroundColor: "transparent" }}
-                    color="#f2f2f2"
-                    onClick={() => {
-                      removeAdmin(index);
-                    }}
-                    isDisabled={adminAddresses.length === 0}
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <Input
+                      placeholder="0x....ff"
+                      value={admin}
+                      onChange={(e) =>
+                        handleAdminAddressChange(index, e.target.value)
+                      }
+                      border="0px"
+                      _placeholder={{
+                        color: "#3E415C",
+                        fontSize: ".89rem",
+                        fontWeight: "600",
+                      }}
+                      _focus={{ outline: "0", boxShadow: "none" }}
+                    />
+                    <Button
+                      backgroundColor="#676D9A1A"
+                      border="1px solid #676D9A4D"
+                      _hover={{ backgroundColor: "transparent" }}
+                      color="#f2f2f2"
+                      onClick={() => {
+                        removeAdmin(index);
+                      }}
+                      isDisabled={adminAddresses.length === 0}
                     >
-                      <path
-                        d="M13 1L7 7M7 7L1 13M7 7L13 13M7 7L1 1"
-                        stroke="#F0F0F5"
-                        stroke-width="1.31"
-                        stroke-linecap="round"
-                      />
-                    </svg>
-                  </Button>
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M13 1L7 7M7 7L1 13M7 7L13 13M7 7L1 1"
+                          stroke="#F0F0F5"
+                          stroke-width="1.31"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </Button>
                   </Box>
                 ))}
               </Box>
@@ -421,42 +473,44 @@ const CreateSpaceDashboard = () => {
                     padding="8px 16px"
                   >
                     <Input
-                    placeholder="0x....ff"
-                    value={author}
-                    onChange={(e) => handleAddressChange(index, e.target.value)}
-                    border="0px"
-                    _placeholder={{
-                      color: "#3E415C",
-                      fontSize: ".89rem",
-                      fontWeight: "600",
-                    }}
-                    _focus={{ outline: "0", boxShadow: "none" }}
-                  />
-                                    <Button
-                    backgroundColor="#676D9A1A"
-                    border="1px solid #676D9A4D"
-                    _hover={{ backgroundColor: "transparent" }}
-                    color="#f2f2f2"
-                    onClick={() => {
-                      removeAuthor(index);
-                    }}
-                    isDisabled={authorAddresses.length === 0}
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                      placeholder="0x....ff"
+                      value={author}
+                      onChange={(e) =>
+                        handleAddressChange(index, e.target.value)
+                      }
+                      border="0px"
+                      _placeholder={{
+                        color: "#3E415C",
+                        fontSize: ".89rem",
+                        fontWeight: "600",
+                      }}
+                      _focus={{ outline: "0", boxShadow: "none" }}
+                    />
+                    <Button
+                      backgroundColor="#676D9A1A"
+                      border="1px solid #676D9A4D"
+                      _hover={{ backgroundColor: "transparent" }}
+                      color="#f2f2f2"
+                      onClick={() => {
+                        removeAuthor(index);
+                      }}
+                      isDisabled={authorAddresses.length === 0}
                     >
-                      <path
-                        d="M13 1L7 7M7 7L1 13M7 7L13 13M7 7L1 1"
-                        stroke="#F0F0F5"
-                        stroke-width="1.31"
-                        stroke-linecap="round"
-                      />
-                    </svg>
-                  </Button>
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M13 1L7 7M7 7L1 13M7 7L13 13M7 7L1 1"
+                          stroke="#F0F0F5"
+                          stroke-width="1.31"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </Button>
                   </Box>
                 ))}
               </Box>
@@ -615,6 +669,9 @@ const CreateSpaceDashboard = () => {
           border="1px solid #3FE0B2"
           _hover={{ bg: "#3FE0B2", color: "black" }}
           borderRadius={"6px"}
+          onClick={() => {
+            // handleSpace();
+          }}
         >
           Save
         </Button>

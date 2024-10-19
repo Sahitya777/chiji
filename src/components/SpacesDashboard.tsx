@@ -1,10 +1,11 @@
 import { Box, Button, SimpleGrid ,Text} from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { baseSepolia } from "viem/chains";
 import { useAccount, useEnsName, useSignMessage, useSignTypedData } from "wagmi";
 import { useAvatar, useName } from '@coinbase/onchainkit/identity';
+import axios from 'axios'
 const SpacesDashboard = () => {
   const [spaces, setSpaces] = useState([
     { name: "Avnu", members: 70,id:'Avnu.eth',avatarImage:''},
@@ -61,6 +62,19 @@ const SpacesDashboard = () => {
     }
   };
   const { data: name, isLoading: nameIsLoading } =  useName({ address:address as any, chain: baseSepolia as any });
+  // const handleJoin=async()=>{
+  //   const res=await axios.get(`https://5e27-106-51-118-108.ngrok-free.app/api/join/space/${address}/2`)
+  //   console.log(res?.data,'data')
+  // }
+  // useEffect(()=>{
+  //   if(address){
+  //     const fetchDetails=async()=>{
+  //       const res=await axios.get(`https://5e27-106-51-118-108.ngrok-free.app/api/activity/user/spaces/${address}`)
+  //       console.log(res?.data,"fetch deatils")
+  //     }
+  //     fetchDetails()
+  //   }
+  // },[address])
   return (
     <Box display="flex" width="100%" padding="2rem" pt="5rem">
       <Box
@@ -149,32 +163,34 @@ const SpacesDashboard = () => {
                 _hover={{ bg: "#3FE0B2", color: "black" }}
                 borderRadius={"6px"}
                 onClick={(event) => {
-                  event.stopPropagation(); // Prevents the Box's onClick from being triggered
-                  signTypedData({
-                    types: {
-                      Person: [
-                        { name: 'name', type: 'string' },
-                        { name: 'wallet', type: 'address' },
-                      ],
-                      Mail: [
-                        { name: 'from', type: 'Person' },
-                        { name: 'to', type: 'Person' },
-                        { name: 'contents', type: 'string' },
-                      ],
-                    },
-                    primaryType: 'Mail',
-                    message: {
-                      from: {
-                        name: 'Cow',
-                        wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
-                      },
-                      to: {
-                        name: 'Bob',
-                        wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
-                      },
-                      contents: 'Hello, Bob!',
-                    },
-                  })
+                  event.stopPropagation(); 
+                  // handleJoin()
+                  // Prevents the Box's onClick from being triggered
+                  // signTypedData({
+                  //   types: {
+                  //     Person: [
+                  //       { name: 'name', type: 'string' },
+                  //       { name: 'wallet', type: 'address' },
+                  //     ],
+                  //     Mail: [
+                  //       { name: 'from', type: 'Person' },
+                  //       { name: 'to', type: 'Person' },
+                  //       { name: 'contents', type: 'string' },
+                  //     ],
+                  //   },
+                  //   primaryType: 'Mail',
+                  //   message: {
+                  //     from: {
+                  //       name: 'Cow',
+                  //       wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+                  //     },
+                  //     to: {
+                  //       name: 'Bob',
+                  //       wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+                  //     },
+                  //     contents: 'Hello, Bob!',
+                  //   },
+                  // })
                 }}
               >
                 Join
