@@ -510,9 +510,6 @@ const EnlistDashboard = () => {
                     boxShadow: "none",
                   }}
                 />
-                {quorum>0&&<Box display="flex" whiteSpace="nowrap">
-                  {convertSecondsToTime(quorum)}
-                </Box>}
               </Box>
               <Box
                 display="flex"
@@ -712,9 +709,6 @@ const EnlistDashboard = () => {
                     boxShadow: "none",
                   }}
                 />
-                {initialProposalThreshold>0&&<Box display="flex" whiteSpace="nowrap">
-                  {convertSecondsToTime(initialProposalThreshold)}
-                </Box>}
               </Box>
             </Box>
           </Box>
