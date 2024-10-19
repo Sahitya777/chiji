@@ -26,7 +26,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import governancTokenAbi from "../../Blockchain/abis/GovernanceTokenAbi.json";
+import governancTokenAbi from "../../Blockchain/abis/GovernanceTokenDeployAbi.json";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import Link from "next/link";
