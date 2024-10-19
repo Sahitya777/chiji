@@ -60,12 +60,12 @@ const GovernanceTokenModal = ({
   const [walletConnectedRefresh, setWalletConnectedRefresh] = useState(false);
   const [inputAmount, setinputAmount] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState(0);
-  const [name, setname] = useState<string>('')
-  const [symbol, setsymbol] = useState<string>('')
-  const [owner, setowner] = useState<string>('')
-  const [initialSupply, setinitialSupply] = useState<number>(0)
-  const [maxSupply, setmaxSupply] = useState<number>(0)
-  const [tokenChoice, settokenChoice] = useState('erc20')
+  const [name, setname] = useState<string>("");
+  const [symbol, setsymbol] = useState<string>("");
+  const [owner, setowner] = useState<string>("");
+  const [initialSupply, setinitialSupply] = useState<number>(0);
+  const [maxSupply, setmaxSupply] = useState<number>(0);
+  const [tokenChoice, settokenChoice] = useState("erc20");
   const Votecharge: any = {
     Against: 0,
     For: 1,
@@ -119,13 +119,18 @@ const GovernanceTokenModal = ({
         const approve = await writeContractAsyncApprove({
           abi: governancTokenAbi,
           address: governorTokenContractAddress as any,
-          functionName:tokenChoice==='erc20'? "deployERC20Token":'deployUpgradeableERC20Token',
+          functionName:
+            tokenChoice === "erc20"
+              ? "deployERC20Token"
+              : "deployUpgradeableERC20Token",
           args: [
-            {name:name,
-            symbol:symbol,
-            initialOwner:owner,
-            initialSupply:initialSupply,
-            maxSupply: maxSupply}
+            {
+              name: name,
+              symbol: symbol,
+              initialOwner: owner,
+              initialSupply: initialSupply,
+              maxSupply: maxSupply,
+            },
           ],
           chain: baseSepolia,
         });
@@ -291,32 +296,52 @@ const GovernanceTokenModal = ({
                     display="flex"
                     flexDirection="column"
                     gap="0rem"
-                    padding="16px"
+                    padding="8px"
                     borderRadius="6px"
                     border="1px solid #727DA133"
                   >
-                    <Box padding="8px 16px">
+                    <Box                       display="flex"
+                      flexDirection="column"
+                      borderRadius="16px"
+                      padding="8px 16px"
+                      gap="0.4rem">
                       <Text>Select token</Text>
-                      <Select value={tokenChoice} onChange={(e)=>{
-                        settokenChoice(e.target.value)
-                      }}>
+                      <Select
+                        value={tokenChoice}
+                        onChange={(e) => {
+                          settokenChoice(e.target.value);
+                        }}
+                                                border="1px solid"
+                        borderColor="#23233D"
+                        _hover={{
+                          border:'1px solid #23233D'
+                        }}
+
+                      >
                         <option value="erc20">Erc 20</option>
-                        <option value="erc20Upgradeable">Erc 20 Upgradeable</option>
+                        <option value="erc20Upgradeable">
+                          Erc 20 Upgradeable
+                        </option>
                       </Select>
                     </Box>
                     <Box
-                      // display="flex"
-                      alignItems="center"
+                      display="flex"
+                      flexDirection="column"
                       borderRadius="16px"
                       padding="8px 16px"
+                      gap="0.4rem"
                     >
                       <Text whiteSpace="nowrap">Name</Text>
                       <Input
-                          value={name}
-                          onChange={(e) => {
-                            setname(e.target.value);
-                          }}
-                        placeholder="Basic usage"
+                        value={name}
+                        onChange={(e) => {
+                          setname(e.target.value);
+                        }}
+                        _hover={{
+                          border:'1px solid #23233D'
+                        }}
+                        border="1px solid"
+                        borderColor="#23233D"
                         _placeholder={{
                           color: "#3E415C",
                           fontSize: ".89rem",
@@ -324,24 +349,31 @@ const GovernanceTokenModal = ({
                           outline: "none",
                         }}
                         _focus={{
+                          border: "1px solid",
+                          borderColor: "#23233D",
                           outline: "0",
                           boxShadow: "none",
                         }}
                       />
                     </Box>
                     <Box
-                      // display="flex"
-                      alignItems="center"
+                      display="flex"
+                      flexDirection="column"
                       borderRadius="16px"
                       padding="8px 16px"
+                      gap="0.4rem"
                     >
                       <Text whiteSpace="nowrap">Symbol</Text>
                       <Input
-                          value={symbol}
-                          onChange={(e) => {
-                            setsymbol(e.target.value);
-                          }}
-                        placeholder="Basic usage"
+                        value={symbol}
+                        onChange={(e) => {
+                          setsymbol(e.target.value);
+                        }}
+                        _hover={{
+                          border:'1px solid #23233D'
+                        }}
+                        border="1px solid"
+                        borderColor="#23233D"
                         _placeholder={{
                           color: "#3E415C",
                           fontSize: ".89rem",
@@ -349,24 +381,31 @@ const GovernanceTokenModal = ({
                           outline: "none",
                         }}
                         _focus={{
+                          border: "1px solid",
+                          borderColor: "#23233D",
                           outline: "0",
                           boxShadow: "none",
                         }}
                       />
                     </Box>
                     <Box
-                      // display="flex"
-                      alignItems="center"
+                      display="flex"
+                      flexDirection="column"
                       borderRadius="16px"
                       padding="8px 16px"
+                      gap="0.4rem"
                     >
                       <Text whiteSpace="nowrap">Initial Owner</Text>
                       <Input
-                          value={owner}
-                          onChange={(e) => {
-                            setowner(e.target.value);
-                          }}
-                        placeholder="Basic usage"
+                        value={owner}
+                        onChange={(e) => {
+                          setowner(e.target.value);
+                        }}
+                        _hover={{
+                          border:'1px solid #23233D'
+                        }}
+                        border="1px solid"
+                        borderColor="#23233D"
                         _placeholder={{
                           color: "#3E415C",
                           fontSize: ".89rem",
@@ -374,25 +413,32 @@ const GovernanceTokenModal = ({
                           outline: "none",
                         }}
                         _focus={{
+                          border: "1px solid",
+                          borderColor: "#23233D",
                           outline: "0",
                           boxShadow: "none",
                         }}
                       />
                     </Box>
                     <Box
-                      // display="flex"
-                      alignItems="center"
+                      display="flex"
+                      flexDirection="column"
                       borderRadius="16px"
                       padding="8px 16px"
+                      gap="0.4rem"
                     >
                       <Text whiteSpace="nowrap">Initial Supply</Text>
                       <Input
                         type="number"
-                          value={initialSupply ?initialSupply:''}
-                          onChange={(e) => {
-                            setinitialSupply(Number(e.target.value));
-                          }}
-                        placeholder="Basic usage"
+                        value={initialSupply ? initialSupply : ""}
+                        onChange={(e) => {
+                          setinitialSupply(Number(e.target.value));
+                        }}
+                        _hover={{
+                          border:'1px solid #23233D'
+                        }}
+                        border="1px solid"
+                        borderColor="#23233D"
                         _placeholder={{
                           color: "#3E415C",
                           fontSize: ".89rem",
@@ -400,25 +446,32 @@ const GovernanceTokenModal = ({
                           outline: "none",
                         }}
                         _focus={{
+                          border: "1px solid",
+                          borderColor: "#23233D",
                           outline: "0",
                           boxShadow: "none",
                         }}
                       />
                     </Box>
                     <Box
-                      // display="flex"
-                      alignItems="center"
+                      display="flex"
+                      flexDirection="column"
                       borderRadius="16px"
                       padding="8px 16px"
+                      gap="0.4rem"
                     >
                       <Text whiteSpace="nowrap">Max Supply</Text>
                       <Input
-                          value={maxSupply ?maxSupply:''}
-                          onChange={(e) => {
-                            setmaxSupply(Number(e.target.value));
-                          }}
+                        value={maxSupply ? maxSupply : ""}
+                        onChange={(e) => {
+                          setmaxSupply(Number(e.target.value));
+                        }}
+                        _hover={{
+                          border:'1px solid #23233D'
+                        }}
                         type="number"
-                        placeholder="Basic usage"
+                        border="1px solid"
+                        borderColor="#23233D"
                         _placeholder={{
                           color: "#3E415C",
                           fontSize: ".89rem",
@@ -426,14 +479,21 @@ const GovernanceTokenModal = ({
                           outline: "none",
                         }}
                         _focus={{
+                          border: "1px solid",
+                          borderColor: "#23233D",
                           outline: "0",
                           boxShadow: "none",
                         }}
                       />
                     </Box>
-                    <Button mt="1rem" onClick={()=>{
-                      handleTransaction()
-                    }}>Deploy</Button>
+                    <Button
+                      mt="1rem"
+                      onClick={() => {
+                        handleTransaction();
+                      }}
+                    >
+                      Deploy
+                    </Button>
                   </Box>
                 </Card>
               </Box>

@@ -99,7 +99,7 @@ const EnlistDashboard = () => {
       {
         const approve = await writeContractAsyncApprove({
           abi: beckonproxyAbi,
-          address: "0xDbf641F3a981D6Ea74F079C4B989098588De3326",
+          address: "0xB211Ed715e0cff1283cF3c8c4F15a9b1E78F8A6b",
           functionName: "createProxy",
           args: [
             {
