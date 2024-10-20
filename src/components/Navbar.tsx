@@ -78,7 +78,7 @@ const Navbar = () => {
             _hover={{ color: "white" }}
             fontWeight="500"
           >
-            Enlist
+            Deploy Model
           </Box>
         </Box>
       </Box>

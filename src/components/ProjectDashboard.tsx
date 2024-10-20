@@ -210,6 +210,7 @@ const ProjectDashboard = () => {
         {address ? (
           <ProposalModal
             buttonText="Create Proposal"
+            governanceContractAddress="0x6DE512484Ad75F50994E3642407B7d85d081d030"
             width="100%"
             padding="1.2rem"
             bg="black"

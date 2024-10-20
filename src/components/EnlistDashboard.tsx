@@ -1,6 +1,18 @@
-import { Box, Button, Input, Switch, Text, Tooltip } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Input,
+  Spinner,
+  Switch,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useSignTypedData, useWriteContract } from "wagmi";
+import {
+  useSignTypedData,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import StrategyDashboard from "./modals/StrategyModal";
 import { config } from "@/services/wagmi/config";
 import beckonproxyAbi from "../Blockchain/abis/beakonproxyAbi.json";
@@ -10,6 +22,7 @@ import { beaconFactoryAddress } from "@/constants/base-constants";
 import GovernanceTokenModal from "./modals/GovernanceTokenModal";
 import InfoIconBig from "@/assets/icons/InfoIcon";
 import numberFormatter from "@/constants/numberFormatter";
+import { ethers } from "ethers";
 const EnlistDashboard = () => {
   const { signTypedData } = useSignTypedData();
   const [executorAddresses, setexecutorAddresses] = useState<any>([]);
@@ -23,6 +36,9 @@ const EnlistDashboard = () => {
   const [initialOwnerAddress, setinitialOwnerAddress] = useState<string>("");
   const [initialVotingDelay, setinitialVotingDelay] = useState<number>(0);
   const [initialVotingPeriod, setinitialVotingPeriod] = useState<number>(0);
+  const [txStatus, settxStatus] = useState(false);
+  const [txloading, setTxloading] = useState(false);
+  const [enteredtransaction, setenteredtransaction] = useState(false);
   const [initialProposalThreshold, setinitialProposalThreshold] =
     useState<number>(0);
   const [transactionDetailsFullfiled, settransactionDetailsFullfiled] =
@@ -52,6 +68,9 @@ const EnlistDashboard = () => {
     const totalHours = totalMinutes / 60;
 
     if (totalHours < 1) {
+      if (totalMinutes < 1) {
+        return `${Math.floor(seconds)} seconds`;
+      }
       return `${Math.floor(totalMinutes)} minutes`;
     } else if (totalHours < 24) {
       return `${totalHours.toFixed(2)} hours`;
@@ -94,9 +113,56 @@ const EnlistDashboard = () => {
     initialVotingPeriod,
   ]);
 
+  const {
+    data: result,
+    isSuccess: approveSuccess,
+    isLoading: approveLoading,
+  } = useWaitForTransactionReceipt({
+    hash: dataApprove,
+    chainId: baseSepolia.id,
+  });
+  const decodeLogs = (receipt: any) => {
+    if (receipt && receipt.logs) {
+      const contractInterface = new ethers.utils.Interface(beckonproxyAbi);
+
+      const events = receipt.logs
+        .map((log: { topics: Array<string>; data: string }) => {
+          try {
+            return contractInterface.parseLog(log); // Decodes the log using the contract ABI
+          } catch (error) {
+            console.error("Failed to parse log", error);
+            return null;
+          }
+        })
+        .filter((event: null) => event !== null); // Filter out null values for logs that don't match the ABI
+
+      return events;
+    }
+    return [];
+  };
+
+  useEffect(() => {
+    if (approveSuccess && !approveLoading) {
+      settxStatus(true);
+      setTxloading(false);
+    }
+  }, [approveSuccess]);
+
+  useEffect(() => {
+    if (approveSuccess && txStatus && !txloading) {
+      toast.success(`Successfull deployed governance model at ${decodeLogs(result)[0].args.contractAddress}`, {
+        position: "bottom-right",
+        autoClose:false
+      });
+      setenteredtransaction(false);
+      // console.log(decodeLogs(result),'val')
+    }
+  }, [approveSuccess, txStatus, txloading]);
+
   const handleTransaction = async () => {
     try {
       {
+        setenteredtransaction(true);
         const approve = await writeContractAsyncApprove({
           abi: beckonproxyAbi,
           address: "0xB211Ed715e0cff1283cF3c8c4F15a9b1E78F8A6b",
@@ -139,6 +205,7 @@ const EnlistDashboard = () => {
       }
     } catch (err: any) {
       console.log(err, "err approve");
+      setenteredtransaction(false);
       // setTransactionFailed(true);
       // console.log(err,"approve err")
       // const uqID = getUniqueId()
@@ -295,6 +362,7 @@ const EnlistDashboard = () => {
                   onChange={(e) => {
                     setadminAddres(e.target.value);
                   }}
+                  isDisabled={enteredtransaction}
                   border="0px"
                   _placeholder={{
                     color: "#3E415C",
@@ -339,6 +407,7 @@ const EnlistDashboard = () => {
                 <Input
                   value={minDelay ? minDelay : ""}
                   onChange={(e) => setminDelay(Number(e.target.value))} // Converts string to number
+                  isDisabled={enteredtransaction}
                   placeholder="20000 seconds"
                   border="0px"
                   type="number"
@@ -353,9 +422,11 @@ const EnlistDashboard = () => {
                     boxShadow: "none",
                   }}
                 />
-                {minDelay>0&& <Box display="flex" whiteSpace="nowrap">
-                  {convertSecondsToTime(minDelay)}
-                </Box>}
+                {minDelay > 0 && (
+                  <Box display="flex" whiteSpace="nowrap">
+                    {convertSecondsToTime(minDelay)}
+                  </Box>
+                )}
               </Box>
               <Box
                 display="flex"
@@ -390,6 +461,7 @@ const EnlistDashboard = () => {
                   onChange={(e) => {
                     setgovernancename(e.target.value);
                   }}
+                  isDisabled={enteredtransaction}
                   placeholder="APE"
                   border="0px"
                   _placeholder={{
@@ -437,6 +509,7 @@ const EnlistDashboard = () => {
                   onChange={(e) => {
                     setgovernanceTokenAddress(e.target.value);
                   }}
+                  isDisabled={enteredtransaction}
                   placeholder="0xDbf6....3326"
                   border="0px"
                   _placeholder={{
@@ -450,19 +523,37 @@ const EnlistDashboard = () => {
                     boxShadow: "none",
                   }}
                 />
-                <GovernanceTokenModal
-                  buttonText="Don't have a token?"
-                  padding="1.2rem"
-                  bg="black"
-                  width="100%"
-                  color="#3FE0B2"
-                  height={"2rem"}
-                  fontSize={"14px"}
-                  lineHeight="14px"
-                  border="1px solid #3FE0B2"
-                  _hover={{ bg: "#3FE0B2", color: "black" }}
-                  borderRadius={"6px"}
-                />
+                {enteredtransaction ? (
+                  <Button
+                    padding="1.2rem"
+                    bg="black"
+                    width="100%"
+                    color="#3FE0B2"
+                    height={"2rem"}
+                    fontSize={"14px"}
+                    lineHeight="14px"
+                    border="1px solid #3FE0B2"
+                    _hover={{ bg: "#3FE0B2", color: "black" }}
+                    borderRadius={"6px"}
+                    isDisabled={enteredtransaction}
+                  >
+                    Don&apos; have a token
+                  </Button>
+                ) : (
+                  <GovernanceTokenModal
+                    buttonText="Don't have a token?"
+                    padding="1.2rem"
+                    bg="black"
+                    width="100%"
+                    color="#3FE0B2"
+                    height={"2rem"}
+                    fontSize={"14px"}
+                    lineHeight="14px"
+                    border="1px solid #3FE0B2"
+                    _hover={{ bg: "#3FE0B2", color: "black" }}
+                    borderRadius={"6px"}
+                  />
+                )}
               </Box>
               <Box
                 display="flex"
@@ -497,6 +588,7 @@ const EnlistDashboard = () => {
                   onChange={(e) => {
                     setquorum(Number(e.target.value));
                   }}
+                  isDisabled={enteredtransaction}
                   placeholder="3%"
                   border="0px"
                   _placeholder={{
@@ -544,6 +636,7 @@ const EnlistDashboard = () => {
                   onChange={(e) => {
                     setinitialOwnerAddress(e.target.value);
                   }}
+                  isDisabled={enteredtransaction}
                   placeholder="0x1....3fa9"
                   border="0px"
                   _placeholder={{
@@ -591,6 +684,7 @@ const EnlistDashboard = () => {
                   onChange={(e) => {
                     setinitialVotingDelay(Number(e.target.value));
                   }}
+                  isDisabled={enteredtransaction}
                   placeholder="4000 seconds"
                   border="0px"
                   type="number"
@@ -605,9 +699,11 @@ const EnlistDashboard = () => {
                     boxShadow: "none",
                   }}
                 />
-                {initialVotingDelay>0&&<Box display="flex" whiteSpace="nowrap">
-                  {convertSecondsToTime(initialVotingDelay)}
-                </Box>}
+                {initialVotingDelay > 0 && (
+                  <Box display="flex" whiteSpace="nowrap">
+                    {convertSecondsToTime(initialVotingDelay)}
+                  </Box>
+                )}
               </Box>
               <Box
                 display="flex"
@@ -642,6 +738,7 @@ const EnlistDashboard = () => {
                   onChange={(e) => {
                     setinitialVotingPeriod(Number(e.target.value));
                   }}
+                  isDisabled={enteredtransaction}
                   placeholder="5000 seconds"
                   border="0px"
                   type="number"
@@ -656,9 +753,11 @@ const EnlistDashboard = () => {
                     boxShadow: "none",
                   }}
                 />
-                {initialVotingPeriod>0&&<Box display="flex" whiteSpace="nowrap">
-                  {convertSecondsToTime(initialVotingPeriod)}
-                </Box>}
+                {initialVotingPeriod > 0 && (
+                  <Box display="flex" whiteSpace="nowrap">
+                    {convertSecondsToTime(initialVotingPeriod)}
+                  </Box>
+                )}
               </Box>
               <Box
                 display="flex"
@@ -695,7 +794,8 @@ const EnlistDashboard = () => {
                   onChange={(e) => {
                     setinitialProposalThreshold(Number(e.target.value));
                   }}
-                  placeholder="500 seconds"
+                  isDisabled={enteredtransaction}
+                  placeholder="500"
                   type="number"
                   border="0px"
                   _placeholder={{
@@ -777,7 +877,7 @@ const EnlistDashboard = () => {
                       onClick={() => {
                         removeAdmin(index);
                       }}
-                      isDisabled={proposerAddresses.length === 0}
+                      isDisabled={enteredtransaction}
                     >
                       <svg
                         width="14"
@@ -800,6 +900,7 @@ const EnlistDashboard = () => {
             )}
             <Button
               mt="1rem"
+              isDisabled={enteredtransaction}
               onClick={() => {
                 addAdmin();
               }}
@@ -872,7 +973,7 @@ const EnlistDashboard = () => {
                       onClick={() => {
                         removeAuthor(index);
                       }}
-                      isDisabled={executorAddresses.length === 0}
+                      isDisabled={enteredtransaction}
                     >
                       <svg
                         width="14"
@@ -895,6 +996,7 @@ const EnlistDashboard = () => {
             )}
             <Button
               mt="1rem"
+              isDisabled={enteredtransaction}
               onClick={() => {
                 addAuthor();
               }}
@@ -920,24 +1022,27 @@ const EnlistDashboard = () => {
         <Box>
           <Text fontSize="24px">Actions</Text>
         </Box>
-        <Button
-          width="100%"
-          padding="1.2rem"
-          bg="black"
-          color="#3FE0B2"
-          height={"2rem"}
-          fontSize={"14px"}
-          lineHeight="14px"
-          border="1px solid #3FE0B2"
-          _hover={{ bg: "#3FE0B2", color: "black" }}
-          borderRadius={"6px"}
-          isDisabled={!transactionDetailsFullfiled}
-          onClick={() => {
-            handleTransaction();
-          }}
-        >
-          Deploy
-        </Button>
+        {
+          <Button
+            width="100%"
+            padding="1.2rem"
+            bg={enteredtransaction ? "#3FE0B2" : "black"}
+            color={enteredtransaction ? "black" : "#3FE0B2"}
+            height={"2rem"}
+            fontSize={"14px"}
+            lineHeight="14px"
+            border="1px solid #3FE0B2"
+            _hover={{ bg: "#3FE0B2", color: "black" }}
+            borderRadius={"6px"}
+            isDisabled={!transactionDetailsFullfiled}
+            onClick={() => {
+              handleTransaction();
+            }}
+          >
+            {enteredtransaction && <Spinner />}
+            {!enteredtransaction ? "Deploy" : ""}
+          </Button>
+        }
       </Box>
     </Box>
   );

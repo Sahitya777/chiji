@@ -30,7 +30,7 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import governanceTokenAbi from "../../Blockchain/abis/GovernanceTokenAbi.json";
-
+import beackonAbi from '../../Blockchain/abis/beakonproxyAbi.json'
 // import { toast } from "react-toastify";
 // import CopyToClipboard from "react-copy-to-clipboard";
 
@@ -52,6 +52,7 @@ import {
   readDelegateLimit,
 } from "@/Blockchain/scripts/governanceCalls";
 import numberFormatter from "@/constants/numberFormatter";
+import { ethers } from "ethers";
 const CastVoteModal = ({
   buttonText,
   voteChoice,
@@ -125,13 +126,27 @@ const CastVoteModal = ({
   } = useWriteContract({
     config,
   });
-  const {
-    isLoading: approveLoading,
-    isSuccess: approveSuccess,
-    data,
-  } = useWaitForTransactionReceipt({
+  const {data:result} = useWaitForTransactionReceipt({
     hash: dataApprove,
-  });
+    chainId:baseSepolia.id
+  })
+  const decodeLogs = (receipt:any) => {
+    if (receipt && receipt.logs) {
+      const contractInterface = new ethers.utils.Interface(beackonAbi);
+      
+      const events = receipt.logs.map((log: { topics: Array<string>; data: string; }) => {
+        try {
+          return contractInterface.parseLog(log); // Decodes the log using the contract ABI
+        } catch (error) {
+          console.error('Failed to parse log', error);
+          return null;
+        }
+      }).filter((event: null) => event !== null); // Filter out null values for logs that don't match the ABI
+
+      return events;
+    }
+    return [];
+  };
   const handleTransaction = async () => {
     try {
       {

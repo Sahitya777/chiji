@@ -1,9 +1,10 @@
-import { Box, Button, Input, Switch, Text } from "@chakra-ui/react";
+import { Box, Button, Input, Switch, Text, Tooltip } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSignTypedData } from "wagmi";
 import StrategyDashboard from "./modals/StrategyModal";
 import axios from "axios";
 import { governorTokenContractAddress } from "@/constants/base-constants";
+import InfoIconBig from "@/assets/icons/InfoIcon";
 const CreateSpaceDashboard = () => {
   const { signTypedData } = useSignTypedData();
   const [authorAddresses, setAuthorAddresses] = useState<any>([]);
@@ -15,6 +16,7 @@ const CreateSpaceDashboard = () => {
   const [tokenAddress, settokenAddress] = useState<string>("");
   const [avatar, setavatar] = useState<any>("");
   const [updatedAdminData, setupdatedAdminData] = useState<boolean>(false);
+  const [paramsFilled, setparamsFilled] = useState(false)
   const [optionEditAdminAddresses, setoptionEditAdminAddresses] =
     useState<boolean>(false);
   const [governanceContractAddress, setgovernanceContractAddress] =
@@ -26,6 +28,15 @@ const CreateSpaceDashboard = () => {
       ...adminAddresses,
     ]);
   }, [updatedAdminData]);
+
+  useEffect(()=>{
+    if(authorAddresses.length>0 && adminAddresses.length>0 && spaceName!=='' &&about!=='' &&tokenSymbol!=='' &&tokenAddress!=='' &&governanceContractAddress!==''){
+      setparamsFilled(true)
+    }else{
+      setparamsFilled(false)
+    }
+
+  },[authorAddresses,adminAddresses,spaceName,about,tokenSymbol,avatar,tokenAddress,governanceContractAddress])
 
   // Handle adding a new author
   const addAuthor = () => {
@@ -118,6 +129,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text>Name</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Enter a unique and descriptive name for your space. This will be the primary identifier for your DAO or community."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   value={spaceName}
                   onChange={(e) => {
@@ -146,6 +176,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text>About</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Provide a brief description of your space's purpose, goals, and community guidelines. This helps members understand what your space is about."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   value={about}
                   onChange={(e) => {
@@ -165,7 +214,7 @@ const CreateSpaceDashboard = () => {
                   }}
                 />
               </Box>
-              <Box
+              {/* <Box
                 display="flex"
                 alignItems="center"
                 gap="0.5rem"
@@ -174,6 +223,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text>Avatar</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Upload a profile picture or logo that represents your space. Recommended size: 400x400 pixels."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   value={avatar}
                   onChange={(e) => {
@@ -211,7 +279,7 @@ const CreateSpaceDashboard = () => {
                     boxShadow: "none",
                   }}
                 />
-              </Box>
+              </Box> */}
               <Box
                 display="flex"
                 alignItems="center"
@@ -221,6 +289,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text>Symbol</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Enter the token symbol associated with your space's governance token (e.g., 'ETH' for Ethereum)."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   value={tokenSymbol}
                   onChange={(e) => {
@@ -249,6 +336,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text whiteSpace="nowrap">Token Address</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Enter the smart contract address of your governance token. This token will be used for voting and proposal creation."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   value={tokenAddress}
                   onChange={(e) => {
@@ -277,6 +383,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text whiteSpace="nowrap">Governance Contract Address</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Enter the address of your governance contract that manages proposals and voting mechanisms for your space."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   value={governanceContractAddress}
                   onChange={(e) => {
@@ -305,6 +430,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text>Twitter</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Add your space's Twitter handle to help members stay updated with announcements and community discussions."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   placeholder="Basic usage"
                   border="0px"
@@ -329,6 +473,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text>Discord</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Add your Discord server invite link to facilitate community discussions and engagement."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   placeholder="Basic usage"
                   border="0px"
@@ -353,6 +516,25 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text>Terms</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                 label="Add a link to your space's terms of service or community guidelines document."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   placeholder="Basic usage"
                   border="0px"
@@ -379,8 +561,27 @@ const CreateSpaceDashboard = () => {
             bg="#151621"
             color="#C9D3EE"
           >
-            <Box>
+            <Box display="flex" alignItems='center' gap="0.4rem">
               <Text fontSize="24px">Admins*</Text>
+              <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Add wallet addresses of administrators who will have special permissions to manage the space and its governance settings."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
             </Box>
             {adminAddresses.length > 0 && (
               <Box mt="1rem" display="flex" flexDirection="column" gap="1rem">
@@ -457,8 +658,27 @@ const CreateSpaceDashboard = () => {
             bg="#151621"
             color="#C9D3EE"
           >
-            <Box>
-              <Text fontSize="24px">Authors</Text>
+            <Box display="flex" alignItems="center" gap="0.4rem">
+              <Text fontSize="24px">Authors*</Text>
+              <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Add wallet addresses of members who can create and submit proposals in your space."
+                  bg="#02010F"
+                  fontSize={"13px"}
+                  fontWeight={"400"}
+                  borderRadius={"lg"}
+                  padding={"2"}
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
             </Box>
             {authorAddresses.length > 0 && (
               <Box mt="1rem" display="flex" flexDirection="column" gap="1rem">
@@ -546,8 +766,28 @@ const CreateSpaceDashboard = () => {
                 padding="8px 16px"
               >
                 <Text>Validation</Text>
+                <Tooltip
+                  hasArrow
+                  arrowShadowColor="#2B2F35"
+                  placement="right"
+                  boxShadow="dark-lg"
+                  label="Set the minimum token balance required for a member to participate in voting on proposals."
+                  bg="#02010F"
+                  fontSize="13px"
+                  fontWeight="400"
+                  borderRadius="lg"
+                  padding="2"
+                  color="#F0F0F5"
+                  border="1px solid"
+                  borderColor="#23233D"
+                >
+                  <Box>
+                    <InfoIconBig />
+                  </Box>
+                </Tooltip>
                 <Input
                   placeholder="Basic usage"
+                  type="number"
                   border="0px"
                   _placeholder={{
                     color: "#3E415C",
@@ -560,40 +800,6 @@ const CreateSpaceDashboard = () => {
                     boxShadow: "none",
                   }}
                 />
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="0.5rem"
-                border="1px solid #727DA133"
-                borderRadius="16px"
-                padding="8px 16px"
-              >
-                <Text whiteSpace="nowrap">Proposal threshold</Text>
-                <Input
-                  placeholder="Basic usage"
-                  border="0px"
-                  _placeholder={{
-                    color: "#3E415C",
-                    fontSize: ".89rem",
-                    fontWeight: "600",
-                    outline: "none",
-                  }}
-                  _focus={{
-                    outline: "0",
-                    boxShadow: "none",
-                  }}
-                />
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="0.5rem"
-                borderRadius="16px"
-                padding="8px 16px"
-              >
-                <Switch id="email-alerts" />
-                <Text>Allow only authors to submit a proposal</Text>
               </Box>
             </Box>
           </Box>
@@ -669,11 +875,12 @@ const CreateSpaceDashboard = () => {
           border="1px solid #3FE0B2"
           _hover={{ bg: "#3FE0B2", color: "black" }}
           borderRadius={"6px"}
+          isDisabled={!paramsFilled}
           onClick={() => {
             // handleSpace();
           }}
         >
-          Save
+          Register Space
         </Button>
       </Box>
     </Box>

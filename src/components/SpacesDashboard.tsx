@@ -88,16 +88,13 @@ const SpacesDashboard = () => {
         height="81vh"
         position="fixed"
       >
-        <Box display="flex" gap="0.2rem" cursor="pointer">
+        <Box display="flex" gap="0.2rem">
           <Box display="flex" justifyContent="center" alignItems="center">
             {/* <BackIcon /> */}
           </Box>
           <Box
             color="#C9D3EE"
             fontSize="18px"
-            onClick={() => {
-              router.push(`/protocol/${router.query.id}`);
-            }}
           >
             All Protocols
           </Box>

@@ -15,13 +15,14 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import {marked} from "marked"; // Use marked for markdown
-import { toast } from 'react-toastify'
+import { marked } from "marked"; // Use marked for markdown
+import { toast } from "react-toastify";
 import { useAccount, useWriteContract } from "wagmi";
 import { config } from "@/services/wagmi/config";
-import governanceAbi from '../../Blockchain/abis/GovernanceContractAbi.json'
-import governanceTokenAbi from '../../Blockchain/abis/GovernanceTokenAbi.json'
+import governanceAbi from "../../Blockchain/abis/GovernanceContractAbi.json";
+import governanceTokenAbi from "../../Blockchain/abis/GovernanceTokenAbi.json";
 import { baseSepolia } from "viem/chains";
+import Link from "next/link";
 const ProposalModal = ({
   buttonText,
   backGroundOverLay,
@@ -33,8 +34,8 @@ const ProposalModal = ({
   const [description, setDescription] = useState<any>(""); // Markdown text state
   const [isPreview, setIsPreview] = useState(false); // Toggle for preview mode
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [paramsFilled, setparamsFilled] = useState<boolean>(false)
-  const {address}=useAccount()
+  const [paramsFilled, setparamsFilled] = useState<boolean>(false);
+  const { address } = useAccount();
   // Toggle Preview mode
   const togglePreview = () => {
     setIsPreview(!isPreview);
@@ -50,26 +51,21 @@ const ProposalModal = ({
   const handleTransaction = async () => {
     try {
       {
-        const approve=await writeContractAsyncApprove({
-          abi:governanceAbi,
+        const approve = await writeContractAsyncApprove({
+          abi: governanceAbi,
           address: governanceContractAddress,
-          functionName: 'propose',
-          args: [
-            [],
-            [],
-            [],
-            description
-          ],
-          chain:baseSepolia
-       })
-       const toastid = toast.info(
-        // `Please wait your transaction is running in background : supply and staking - ${inputAmount} ${currentSelectedCoin} `,
-        `Transaction pending`,
-        {
-          position: 'bottom-right',
-          autoClose: false,
-        }
-      )
+          functionName: "propose",
+          args: [['0xBa70F2A953Ae307366FFD303277f3BE807Ed8883'], [234], ['0x1624f6c6'], description],
+          chain: baseSepolia,
+        });
+        const toastid = toast.info(
+          // `Please wait your transaction is running in background : supply and staking - ${inputAmount} ${currentSelectedCoin} `,
+          `Transaction pending`,
+          {
+            position: "bottom-right",
+            autoClose: false,
+          }
+        );
         // const uqID = getUniqueId()
         // let data: any = localStorage.getItem('transactionCheck')
         // data = data ? JSON.parse(data) : []
@@ -80,12 +76,12 @@ const ProposalModal = ({
         //console.log(isSuccessDeposit, "success ?");
       }
     } catch (err: any) {
-      console.log(err,"err approve")
+      console.log(err, "err approve");
       // setTransactionFailed(true);
       // console.log(err,"approve err")
       // const uqID = getUniqueId()
-      let data: any = localStorage.getItem('transactionCheck')
-      data = data ? JSON.parse(data) : []
+      let data: any = localStorage.getItem("transactionCheck");
+      data = data ? JSON.parse(data) : [];
       if (data) {
         // setTransactionStarted(false)
         // dispatch(setTransactionStatus("failed"));
@@ -94,16 +90,16 @@ const ProposalModal = ({
 
       const toastContent = (
         <div>
-          Transaction declined{' '}
+          Transaction declined{" "}
           {/* <CopyToClipboard text={err}>
             <Text as="u">copy error!</Text>
           </CopyToClipboard> */}
         </div>
-      )
+      );
       toast.error(toastContent, {
-        position: 'bottom-right',
+        position: "bottom-right",
         autoClose: false,
-      })
+      });
       //console.log("supply", err);
       // toast({
       //   description: "An error occurred while handling the transaction. " + err,
@@ -140,13 +136,13 @@ const ProposalModal = ({
       //   isClosable: true,
       // });
     }
-  }
+  };
 
-  useEffect(()=>{
-    if(title!=='' && description!==''){
-      setparamsFilled(true)
+  useEffect(() => {
+    if (title !== "" && description !== "") {
+      setparamsFilled(true);
     }
-  },[title,description])
+  }, [title, description]);
 
   return (
     <div>
@@ -200,7 +196,17 @@ const ProposalModal = ({
                       />
                     </Box>
                     <Box mt="1rem">
-                      <Text color="#C9D3EE">Description (Markdown Supported)</Text>
+                      <Box display="flex" gap="0.3rem" color="#C9D3EE">
+                        <Text color="#C9D3EE">
+                          Description (Markdown Supported)
+                        </Text>
+                        <Link
+                          href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+                          target="_blank"
+                        >
+                          Link
+                        </Link>
+                      </Box>
 
                       {/* Toggle between input (Textarea) and preview (rendered Markdown) */}
                       {!isPreview ? (
@@ -227,7 +233,7 @@ const ProposalModal = ({
                         <Box
                           mt="0.2rem"
                           backgroundColor="transparent"
-                           border="1px solid #727DA133"
+                          border="1px solid #727DA133"
                           color="white"
                           padding="1rem"
                           borderRadius="md"
@@ -245,13 +251,29 @@ const ProposalModal = ({
                       )}
                     </Box>
 
-                    <Box mt="1rem" display="flex" justifyContent="space-between">
+                    <Box
+                      mt="1rem"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
                       <Button onClick={togglePreview}>
                         {isPreview ? "Edit" : "Preview"}
                       </Button>
-                      <Button colorScheme="blue" onClick={()=>{
-                        handleTransaction()
-                      }} isDisabled={!paramsFilled}>
+                      <Button
+                        padding="1.2rem"
+                        bg={"black"}
+                        color={"#3FE0B2"}
+                        height={"2rem"}
+                        fontSize={"14px"}
+                        lineHeight="14px"
+                        border="1px solid #3FE0B2"
+                        _hover={{ bg: "#3FE0B2", color: "black" }}
+                        borderRadius={"6px"}
+                        onClick={() => {
+                          handleTransaction();
+                        }}
+                        isDisabled={!paramsFilled}
+                      >
                         Submit
                       </Button>
                     </Box>

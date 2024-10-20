@@ -26,7 +26,9 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import governancTokenAbi from "../../Blockchain/abis/GovernanceTokenDeployAbi.json";
+import governancTokenDeployAbi from "../../Blockchain/abis/GovernanceTokenDeployAbi.json";
+import governanceTokenAbi from '../../Blockchain/abis/GovernanceTokenAbi.json'
+import beackonproxyAbi from '../../Blockchain/abis/beakonproxyAbi.json'
 import Image from "next/image";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -47,6 +49,7 @@ import { config } from "@/services/wagmi/config";
 import useBalanceofWagmi from "@/Blockchain/hooks/reads/useBalanceOf";
 import { baseSepolia } from "viem/chains";
 import { governorTokenContractAddress } from "@/constants/base-constants";
+import { ethers } from "ethers";
 const GovernanceTokenModal = ({
   buttonText,
   voteChoice,
@@ -66,6 +69,9 @@ const GovernanceTokenModal = ({
   const [initialSupply, setinitialSupply] = useState<number>(0);
   const [maxSupply, setmaxSupply] = useState<number>(0);
   const [tokenChoice, settokenChoice] = useState("erc20");
+  const [txStatus, settxStatus] = useState(false);
+  const [txloading, setTxloading] = useState(false);
+  const [enteredtransaction, setenteredtransaction] = useState(false);
   const Votecharge: any = {
     Against: 0,
     For: 1,
@@ -107,17 +113,36 @@ const GovernanceTokenModal = ({
     config,
   });
   const {
-    isLoading: approveLoading,
+    data: result,
     isSuccess: approveSuccess,
-    data,
+    isLoading: approveLoading,
   } = useWaitForTransactionReceipt({
     hash: dataApprove,
+    chainId: baseSepolia.id,
   });
+
+  useEffect(() => {
+    if (approveSuccess && !approveLoading) {
+      settxStatus(true);
+      setTxloading(false);
+    }
+  }, [approveSuccess]);
+
+  useEffect(() => {
+    if (approveSuccess && txStatus && !txloading) {
+      toast.success(`Successfull deployed governance token at ${result?.logs[0].address}`, {
+        position: "bottom-right",
+        autoClose:false
+      });
+      setenteredtransaction(false);
+      // console.log(decodeLogs(result),'val')
+    }
+  }, [approveSuccess, txStatus, txloading]);
   const handleTransaction = async () => {
     try {
       {
         const approve = await writeContractAsyncApprove({
-          abi: governancTokenAbi,
+          abi: governancTokenDeployAbi,
           address: governorTokenContractAddress as any,
           functionName:
             tokenChoice === "erc20"
@@ -269,7 +294,7 @@ const GovernanceTokenModal = ({
           >
             <ModalHeader
               mt="1rem"
-              fontSize="14px"
+              fontSize="18px"
               fontWeight="600"
               fontStyle="normal"
               lineHeight="20px"
@@ -305,7 +330,7 @@ const GovernanceTokenModal = ({
                       borderRadius="16px"
                       padding="8px 16px"
                       gap="0.4rem">
-                      <Text>Select token</Text>
+                      <Text>Select token type</Text>
                       <Select
                         value={tokenChoice}
                         onChange={(e) => {
